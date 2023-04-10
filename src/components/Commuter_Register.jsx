@@ -20,18 +20,46 @@ function Commuter_Register() {
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMsg, setPasswordErrorMsg] = useState("");
 
-  useEffect(() => {
-    if (password.length < 8) {
-      setPasswordError(true);
-      setPasswordErrorMsg("Password must be at least 8 characters long");
-    } else if (password !== conPassword) {
-      setPasswordError(true);
-      setPasswordErrorMsg("Passwords do not match");
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMsg("");
+  useEffect(() => { 
+
+    if (password.length === 0) {
+      setPasswordError(null);
+      setPasswordErrorMsg(null);
+      return;
     }
+
+    let hasError = false;
+    let errorMsg = "";
+  
+    if (password.length < 8) {
+      hasError = true;
+      errorMsg = "Password must be at least 8 characters long";
+    }
+
+    if (!/\d/.test(password)) {
+      hasError = true;
+      errorMsg = "Password must contain at least one number";
+    }
+
+    if (!/[^A-Za-z0-9]/.test(password)) {
+      hasError = true;
+      errorMsg = "Password must contain at least one special character";
+    }
+
+    if (!/[a-z]/.test(password)) {
+      hasError = true;
+      errorMsg = "Password must contain at least one lowercase letter";
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      hasError = true;
+      errorMsg = "Password must contain at least one uppercase letter";
+    }
+  
+    setPasswordError(hasError);
+    setPasswordErrorMsg(errorMsg);
   }, [password]);
+  
 
   const handleSubmit = (event) => {
     event.preventDefault(); // prevent default form submission behavior

@@ -16,12 +16,13 @@ function Commuter_Register() {
   const [number, setNumber] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [conPassword, setConPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMsg, setPasswordErrorMsg] = useState("");
+  const [conPassword, setConPassword] = useState("");
+  const [conPasswordError, setConPasswordError] = useState(false);
+  const [conPasswordErrorMsg, setConPasswordErrorMsg] = useState("");
 
-  useEffect(() => { 
-
+  useEffect(() => {
     if (password.length === 0) {
       setPasswordError(null);
       setPasswordErrorMsg(null);
@@ -30,7 +31,7 @@ function Commuter_Register() {
 
     let hasError = false;
     let errorMsg = "";
-  
+
     if (password.length < 8) {
       hasError = true;
       errorMsg = "Password must be at least 8 characters long";
@@ -55,11 +56,21 @@ function Commuter_Register() {
       hasError = true;
       errorMsg = "Password must contain at least one uppercase letter";
     }
-  
+
     setPasswordError(hasError);
     setPasswordErrorMsg(errorMsg);
-  }, [password]);
-  
+
+    let conHasError = false;
+    let conErrorMsg = "";
+
+    if (conPassword.length > 0 && password !== conPassword) {
+      conHasError = true;
+      conErrorMsg = "Passwords do not match";
+    }
+
+    setConPasswordError(conHasError);
+    setConPasswordErrorMsg(conHasError ? conErrorMsg : null);
+  }, [password, conPassword]);
 
   const handleSubmit = (event) => {
     event.preventDefault(); // prevent default form submission behavior
@@ -147,6 +158,8 @@ function Commuter_Register() {
 
             <Grid item xs={12}>
               <TextField
+                error={conPasswordError}
+                helperText={conPasswordErrorMsg}
                 label="Confirm Password"
                 placeholder="Confirm Password"
                 type="password"

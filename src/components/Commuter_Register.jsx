@@ -77,26 +77,26 @@ function Commuter_Register() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent default form submission behavior
 
-    try{
+    try {
+      const response = await axios.post(
+        "/commuter/auth/register",
 
-      const response = await axios.post('/commuter/auth/register',
-
-      JSON.stringify({fname,lname,username,email,number,password}),
-      {
-        headers: {'Content-Type': 'application/json'},
-        withCredentials : true
-      }
+        JSON.stringify({ fname, lname, username, email, number, password }),
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
       );
 
-      console.log(JSON.stringify(response));
-    }catch(err){
+      console.log(JSON.stringify(response.data));
+    } catch (err) {
       if (!err?.response) {
-        alert('No Server Response');
-    } else if (err.response?.status === 409) {
-        alert('Username Taken');
-    } else {
-        alert('Registration Failed')
-    }
+        alert("No Server Response");
+      } else if (err.response?.status === 409) {
+        alert("Username Taken");
+      } else {
+        alert("Registration Failed");
+      }
     }
   };
 
@@ -231,7 +231,7 @@ function Commuter_Register() {
                 sx={{ right: 0, bottom: 0, textAlign: "right" }}
               >
                 Already have an account ?
-                <Link to="/commuter/login">Sign in</Link>
+                <Link to="/commuter/auth/login">Sign in</Link>
               </Typography>
             </Grid>
           </Grid>

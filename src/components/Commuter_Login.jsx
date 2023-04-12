@@ -1,9 +1,9 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Avatar,
   Button,
   Grid,
-  Link,
   Paper,
   TextField,
   Typography,
@@ -11,24 +11,8 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 function Commuter_Login() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  //   const [passwordError, setPasswordError] = useState(false);
-  //   const [passwordErrorMsg, setPasswordErrorMsg] = useState("");
-
-  // useEffect(() => {
-  //     if (password.length < 8) {
-  //       setPasswordError(true);
-  //       setPasswordErrorMsg("Password must be at least 8 characters long");
-  //     } else if (password !== conPassword) {
-  //       setPasswordError(true);
-  //       setPasswordErrorMsg("Passwords do not match");
-  //     } else {
-  //       setPasswordError(false);
-  //       setPasswordErrorMsg("");
-  //     }
-  //   }, [password]);
 
   const handleSubmit = (event) => {
     event.preventDefault(); // prevent default form submission behavior
@@ -54,14 +38,14 @@ function Commuter_Login() {
           <Grid container rowSpacing={3} spacing={2}>
             <Grid item xs={12}>
               <TextField
-                label="E-Mail"
-                placeholder="E-Mail"
-                type="email"
+                label="Username"
+                placeholder="Username"
+                type="username"
                 fullWidth
                 required
                 variant="standard"
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
+                onChange={(e) => setUsername(e.target.value)}
+                value={username}
               />
             </Grid>
 
@@ -79,7 +63,12 @@ function Commuter_Login() {
             </Grid>
           </Grid>
 
-          <Button variant="contained" fullWidth sx={{ m: "20px 0", p: 1 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            sx={{ m: "20px 0", p: 1 }}
+          >
             SUBMIT
           </Button>
           <Grid container>
@@ -88,7 +77,7 @@ function Commuter_Login() {
                 variant="body1"
                 sx={{ left: 0, bottom: 0, textAlign: "left" }}
               >
-                &lt; <Link href="https://google.com/">Home</Link>
+                &lt;<Link to="/commuter">Home</Link>
               </Typography>
             </Grid>
           </Grid>

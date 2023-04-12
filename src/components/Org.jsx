@@ -5,10 +5,10 @@ function Org() {
     <div>
       <h1>Welcome to the Organization page</h1>
       <div>
-        <Link to="/organization/register">
+        <Link to="/organization/auth/register">
           <button>REGISTER</button>
         </Link>
-        <Link to="/organization/login">
+        <Link to="/organization/auth/login">
           <button>LOGIN</button>
         </Link>
       </div>

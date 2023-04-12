@@ -15,11 +15,11 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="/organization" element={<Org />} />
-        <Route path="/organization/register" element={<Org_Register />} />
-        <Route path="/organization/login" element={<Org_Login />} />
+        <Route path="/organization/auth/register" element={<Org_Register />} />
+        <Route path="/organization/auth/login" element={<Org_Login />} />
         <Route path="/commuter" element={<Commuter />} />
-        <Route path="/commuter/login" element={<Commuter_Login />} />
-        <Route path="/commuter/register" element={<Commuter_Register />} />
+        <Route path="/commuter/auth/login" element={<Commuter_Login />} />
+        <Route path="/commuter/auth/register" element={<Commuter_Register />} />
       </Route>
     </Routes>
   );

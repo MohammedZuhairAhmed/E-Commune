@@ -5,10 +5,10 @@ function Commuter() {
     <div>
       <h1>Welcome to the Commuter page</h1>
       <div>
-        <Link to="/commuter/register">
+        <Link to="/commuter/auth/register">
           <button>REGISTER</button>
         </Link>
-        <Link to="/commuter/login">
+        <Link to="/commuter/auth/login">
           <button>LOGIN</button>
         </Link>
       </div>

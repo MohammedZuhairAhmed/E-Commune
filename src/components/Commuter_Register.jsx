@@ -1,18 +1,20 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   Avatar,
   Button,
   Grid,
-  Link,
   Paper,
   TextField,
   Typography,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import axios from "../api/axios";
 
 function Commuter_Register() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [username, setusername] = useState("");
   const [number, setNumber] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -72,8 +74,30 @@ function Commuter_Register() {
     setConPasswordErrorMsg(conHasError ? conErrorMsg : null);
   }, [password, conPassword]);
 
-  const handleSubmit = (event) => {
-    event.preventDefault(); // prevent default form submission behavior
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // prevent default form submission behavior
+
+    try{
+
+      const response = await axios.post('/commuter/auth/register',
+
+      JSON.stringify({fname,lname,username,email,number,password}),
+      {
+        headers: {'Content-Type': 'application/json'},
+        withCredentials : true
+      }
+      );
+
+      console.log(JSON.stringify(response));
+    }catch(err){
+      if (!err?.response) {
+        alert('No Server Response');
+    } else if (err.response?.status === 409) {
+        alert('Username Taken');
+    } else {
+        alert('Registration Failed')
+    }
+    }
   };
 
   return (
@@ -100,8 +124,8 @@ function Commuter_Register() {
                 fullWidth
                 required
                 variant="standard"
-                onChange={(e) => setFirstName(e.target.value)}
-                value={firstName}
+                onChange={(e) => setFname(e.target.value)}
+                value={fname}
               />
             </Grid>
 
@@ -111,8 +135,20 @@ function Commuter_Register() {
                 placeholder="Last Name"
                 fullWidth
                 variant="standard"
-                onChange={(e) => setLastName(e.target.value)}
-                value={lastName}
+                onChange={(e) => setLname(e.target.value)}
+                value={lname}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                label="Username"
+                placeholder="Username"
+                fullWidth
+                required
+                variant="standard"
+                onChange={(e) => setusername(e.target.value)}
+                value={username}
               />
             </Grid>
 
@@ -172,7 +208,12 @@ function Commuter_Register() {
             </Grid>
           </Grid>
 
-          <Button variant="contained" fullWidth sx={{ m: "20px 0", p: 1 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            sx={{ m: "20px 0", p: 1 }}
+          >
             SUBMIT
           </Button>
           <Grid container>
@@ -181,7 +222,7 @@ function Commuter_Register() {
                 variant="body1"
                 sx={{ left: 0, bottom: 0, textAlign: "left" }}
               >
-                &lt; <Link href="https://google.com/">Home</Link>
+                &lt;<Link to="/commuter">Home</Link>
               </Typography>
             </Grid>
             <Grid item xs={8}>
@@ -189,8 +230,8 @@ function Commuter_Register() {
                 variant="body1"
                 sx={{ right: 0, bottom: 0, textAlign: "right" }}
               >
-                Already have an account ?{" "}
-                <Link href="https://google.com/">Sign in</Link>
+                Already have an account ?
+                <Link to="/commuter/login">Sign in</Link>
               </Typography>
             </Grid>
           </Grid>
@@ -201,3 +242,5 @@ function Commuter_Register() {
 }
 
 export default Commuter_Register;
+
+// firstName lastName username email password

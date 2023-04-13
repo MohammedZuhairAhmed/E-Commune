@@ -9,13 +9,38 @@ import {
   Typography,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import axios from "../api/axios";
 
 function Commuter_Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [data, setData] = useState(null);
 
-  const handleSubmit = (event) => {
-    event.preventDefault(); // prevent default form submission behavior
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // prevent default form submission behavior
+
+    try {
+      const response = await axios.post(
+        "/commuter/auth/login",
+
+        JSON.stringify({ username, password }),
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+
+      console.log(JSON.stringify(response.data));
+      setData(response.data);
+      setUsername("");
+      setPassword("");
+    } catch (err) {
+      if (!err?.response) {
+        alert("No Server Response");
+      } else {
+        alert("Login Failed");
+      }
+    }
   };
 
   return (
@@ -83,6 +108,8 @@ function Commuter_Login() {
           </Grid>
         </Paper>
       </Grid>
+
+      {data ? <h1>HELLO {data.username}</h1> : null}
     </form>
   );
 }

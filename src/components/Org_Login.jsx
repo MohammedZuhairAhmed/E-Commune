@@ -9,13 +9,37 @@ import {
   Typography,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import axios from "../api/axios";
 
 function Org_Login() {
   const [orgname, setOrgname] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault(); // prevent default form submission behavior
+
+    try {
+      const response = await axios.post(
+        "/organization/auth/login",
+
+        JSON.stringify({ name: orgname, password }),
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+
+      console.log(JSON.stringify(response.data));
+
+      setOrgname("");
+      setPassword("");
+    } catch (err) {
+      if (!err?.response) {
+        alert("No Server Response");
+      } else {
+        alert("Login Failed");
+      }
+    }
   };
 
   return (

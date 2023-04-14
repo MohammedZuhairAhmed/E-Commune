@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import Protected_commuter from "./protected_commuter";
 import {
   Avatar,
   Button,
@@ -15,6 +16,7 @@ function Commuter_Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [data, setData] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent default form submission behavior
@@ -34,6 +36,8 @@ function Commuter_Login() {
       setData(response.data);
       setUsername("");
       setPassword("");
+      setData(response.data);
+      setIsAuthenticated(true);
     } catch (err) {
       if (!err?.response) {
         alert("No Server Response");
@@ -44,73 +48,82 @@ function Commuter_Login() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Grid>
-        <Paper
-          elevation={15}
-          sx={{ height: "80vh", width: 500, m: "100px auto", p: 5 }}
-        >
-          <Grid align="center">
-            <Avatar sx={{ bgcolor: "#00e1ff", width: 70, height: 70 }}>
-              {" "}
-              <LockOutlinedIcon sx={{ width: 30, height: 30 }} />
-            </Avatar>
-            <Typography variant="h4" sx={{ paddingTop: 2, marginBottom: 2 }}>
-              Login
-            </Typography>
-          </Grid>
+    <>
+      {isAuthenticated ? (
+        <Protected_commuter data={data} />
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <Grid>
+            <Paper
+              elevation={15}
+              sx={{ height: "80vh", width: 500, m: "100px auto", p: 5 }}
+            >
+              <Grid align="center">
+                <Avatar sx={{ bgcolor: "#00e1ff", width: 70, height: 70 }}>
+                  {" "}
+                  <LockOutlinedIcon sx={{ width: 30, height: 30 }} />
+                </Avatar>
+                <Typography
+                  variant="h4"
+                  sx={{ paddingTop: 2, marginBottom: 2 }}
+                >
+                  Login
+                </Typography>
+              </Grid>
 
-          <Grid container rowSpacing={3} spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                label="Username"
-                placeholder="Username"
-                type="username"
+              <Grid container rowSpacing={3} spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Username"
+                    placeholder="Username"
+                    type="username"
+                    fullWidth
+                    required
+                    variant="standard"
+                    onChange={(e) => setUsername(e.target.value)}
+                    value={username}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    label="Password"
+                    placeholder="Password"
+                    type="password"
+                    fullWidth
+                    required
+                    variant="standard"
+                    onChange={(e) => setPassword(e.target.value)}
+                    value={password}
+                  />
+                </Grid>
+              </Grid>
+
+              <Button
+                type="submit"
+                variant="contained"
                 fullWidth
-                required
-                variant="standard"
-                onChange={(e) => setUsername(e.target.value)}
-                value={username}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <TextField
-                label="Password"
-                placeholder="Password"
-                type="password"
-                fullWidth
-                required
-                variant="standard"
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-              />
-            </Grid>
-          </Grid>
-
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            sx={{ m: "20px 0", p: 1 }}
-          >
-            SUBMIT
-          </Button>
-          <Grid container>
-            <Grid item xs={4}>
-              <Typography
-                variant="body1"
-                sx={{ left: 0, bottom: 0, textAlign: "left" }}
+                sx={{ m: "20px 0", p: 1 }}
               >
-                &lt;<Link to="/commuter">Home</Link>
-              </Typography>
-            </Grid>
+                SUBMIT
+              </Button>
+              <Grid container>
+                <Grid item xs={4}>
+                  <Typography
+                    variant="body1"
+                    sx={{ left: 0, bottom: 0, textAlign: "left" }}
+                  >
+                    &lt;<Link to="/commuter">Home</Link>
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Paper>
           </Grid>
-        </Paper>
-      </Grid>
 
-      {data ? <h1>HELLO {data.username}</h1> : null}
-    </form>
+          {data ? <h1>HELLO {data.username}</h1> : null}
+        </form>
+      )}
+    </>
   );
 }
 

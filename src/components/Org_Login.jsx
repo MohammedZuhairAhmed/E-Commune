@@ -12,7 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import axios from "../api/axios";
 
 function Org_Login() {
-  const [orgname, setOrgname] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (event) => {
@@ -22,7 +22,7 @@ function Org_Login() {
       const response = await axios.post(
         "/organization/auth/login",
 
-        JSON.stringify({ name: orgname, password }),
+        JSON.stringify({ email, password }),
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -31,7 +31,7 @@ function Org_Login() {
 
       console.log(JSON.stringify(response.data));
 
-      setOrgname("");
+      setEmail("");
       setPassword("");
     } catch (err) {
       if (!err?.response) {
@@ -62,14 +62,14 @@ function Org_Login() {
           <Grid container rowSpacing={3} spacing={2}>
             <Grid item xs={12}>
               <TextField
-                label="Organization Name"
-                placeholder="Organization Name"
-                type="Organization Name"
+                label="Organization Mail-ID"
+                placeholder="Organization Mail-ID"
+                type="Organization Mail-ID"
                 fullWidth
                 required
                 variant="standard"
-                onChange={(e) => setOrgname(e.target.value)}
-                value={orgname}
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
               />
             </Grid>
 

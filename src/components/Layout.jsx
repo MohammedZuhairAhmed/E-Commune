@@ -14,7 +14,12 @@ const Layout = () => {
   var today = new Date();
   return (
     <div
-      style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        backgroundColor: "#F6F1F1",
+      }}
     >
       <div style={{ flexGrow: "1" }}>
         <AppBar position="static" sx={{ backgroundColor: "#3f51b5" }}>
@@ -38,8 +43,15 @@ const Layout = () => {
           </Toolbar>
         </AppBar>
       </div>
-      <Outlet/>
-      <TableFooter sx={{ backgroundColor: "#3f51b5", color: "#fff" ,textAlign:"center"}}>
+      <Outlet />
+      <TableFooter
+        sx={{
+          backgroundColor: "#3f51b5",
+          color: "#fff",
+          textAlign: "center",
+          display: "block",
+        }}
+      >
         <p>Copyright &copy; E-Commune {today.getFullYear()}</p>
       </TableFooter>
     </div>

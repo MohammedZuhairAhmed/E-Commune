@@ -103,7 +103,13 @@ function Org_Register() {
       <Grid>
         <Paper
           elevation={15}
-          sx={{ height: "80vh", width: 500, m: "100px auto", p: 5 }}
+          sx={{
+            height: "110vh",
+            width: 500,
+            m: "100px auto",
+            p: 5,
+            backgroundColor: "#DAF5FF",
+          }}
         >
           <Grid align="center">
             <Avatar sx={{ bgcolor: "#00e1ff", width: 70, height: 70 }}>

@@ -30,6 +30,10 @@ const RegisterButton = styled(Link)`
   font-size: 1.2rem;
   text-decoration: none;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #b91c31;
 `;
 
 const LoginButton = styled(Link)`
@@ -41,6 +45,11 @@ const LoginButton = styled(Link)`
   font-size: 1.2rem;
   text-decoration: none;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #363636;
+  }
 `;
 
 function Org() {

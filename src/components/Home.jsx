@@ -7,13 +7,15 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-image: url("https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pexels.com%2Fsearch%2Fwebsite%2520background%2F&psig=AOvVaw1e5ApS03R5pAevaZRiuH8I&ust=1681835846447000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCMj-xfOssf4CFQAAAAAdAAAAABAE");
+  background-image: url("https://unsplash.com/photos/-iVNDAOeXn8");
   background-size: cover;
   background-color: #f2f2f2;
+  margin-top: 6rem;
 `;
 
 const Title = styled.h1`
   font-size: 3rem;
+  margin-top: 2rem;
   margin-bottom: 2rem;
   color: #d62828;
   text-shadow: 2px 2px #444444;
@@ -22,13 +24,13 @@ const Title = styled.h1`
 const Subtitle = styled.h2`
   font-size: 2rem;
   margin-bottom: 1rem;
-  color: #666666;
+  color: #4a4a4a;
 `;
 
 const Description = styled.p`
   font-size: 1.5rem;
   margin-bottom: 2rem;
-  color: #666666;
+  color: #4a4a4a;
 `;
 
 const ButtonWrapper = styled.div`
@@ -45,6 +47,11 @@ const OrganizationButton = styled(Link)`
   font-size: 1.2rem;
   text-decoration: none;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #b91c31;
+  }
 `;
 
 const CommuterButton = styled(Link)`
@@ -56,6 +63,62 @@ const CommuterButton = styled(Link)`
   font-size: 1.2rem;
   text-decoration: none;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #363636;
+  }
+`;
+
+const InfoWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 6rem;
+  background-color: #f2f2f2;
+`;
+
+const InfoBox = styled.div`
+  background-color: #f2f2f2;
+  border-radius: 3px;
+  padding: 3rem;
+  max-width: 80rem;
+  text-align: center;
+
+  @media (max-width: 768px) {
+    padding: 2rem;
+  }
+`;
+
+const InfoTitle = styled.h3`
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #4a4a4a;
+  text-align: center;
+`;
+
+const InfoParagraph = styled.p`
+  font-size: 1.5rem;
+  margin-bottom: 3rem;
+  color: #4a4a4a;
+`;
+
+const ImageWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Image = styled.img`
+  max-width: 100%;
+  max-height: 40rem;
+  border-radius: 3px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  margin: 3rem 0;
+
+  @media (max-width: 768px) {
+    max-height: 20rem;
+  }
 `;
 
 function Home() {
@@ -76,6 +139,17 @@ function Home() {
         <OrganizationButton to="/organization">Organization</OrganizationButton>
         <CommuterButton to="/commuter">Commuter</CommuterButton>
       </ButtonWrapper>
+      <InfoWrapper>
+        <InfoBox>
+          <InfoTitle>How It Works</InfoTitle>
+          <InfoParagraph>
+            Organisations and Employees can connect through our platform to
+            share a ride to work or other destinations. We match commuters and
+            commute prgrams based on their location and commuting needs.
+          </InfoParagraph>
+          <ImageWrapper></ImageWrapper>
+        </InfoBox>
+      </InfoWrapper>
     </Container>
   );
 }

@@ -22,7 +22,7 @@ const Layout = () => {
       }}
     >
       <div style={{ flexGrow: "1" }}>
-        <AppBar position="static" sx={{ backgroundColor: "#3f51b5" }}>
+        <AppBar position="static" sx={{ backgroundColor: "#333" }}>
           <Toolbar>
             <IconButton
               size="large"
@@ -46,13 +46,38 @@ const Layout = () => {
       <Outlet />
       <TableFooter
         sx={{
-          backgroundColor: "#3f51b5",
+          backgroundColor: "#333",
           color: "#fff",
           textAlign: "center",
           display: "block",
         }}
       >
-        <p>Copyright &copy; E-Commune {today.getFullYear()}</p>
+        <p style={{ margin: "1rem" }}>
+          &copy; E-Commune {today.getFullYear()} | All Rights Reserved
+        </p>
+        <Stack direction="row" spacing={2} justifyContent="center">
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: "#3b5998", color: "#fff" }}
+            startIcon={<i className="fab fa-facebook-f"></i>}
+          >
+            Facebook
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: "#55acee", color: "#fff" }}
+            startIcon={<i className="fab fa-twitter"></i>}
+          >
+            Twitter
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: "#dd4b39", color: "#fff" }}
+            startIcon={<i className="fab fa-google"></i>}
+          >
+            Google
+          </Button>
+        </Stack>
       </TableFooter>
     </div>
   );

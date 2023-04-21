@@ -7,7 +7,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-image: url("https://images.unsplash.com/photo-1535105138126-2085cdbc0768?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80");
+  background-image: url("https://unsplash.com/photos/-iVNDAOeXn8");
   background-size: cover;
   background-color: #f2f2f2;
   margin-top: 6rem;

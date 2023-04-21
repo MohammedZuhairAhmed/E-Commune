@@ -8,7 +8,6 @@ import Org_Login from "./components/Org_Login";
 import Org_Register from "./components/Org_Register";
 import Commuter_Register from "./components/Commuter_Register";
 import Commuter_Login from "./components/Commuter_Login";
-
 function App() {
   return (
     <Routes>

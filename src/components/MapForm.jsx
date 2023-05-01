@@ -5,34 +5,65 @@ import {
   StandaloneSearchBox,
   DirectionsRenderer,
 } from "@react-google-maps/api";
-import axios from "../api/axios";
 
-const MapForm = () => {
+const MapForm = ({ style, onAddressChange }) => {
   const mapRef = useRef(null);
   const [fromLocation, setFromLocation] = useState(null);
   const [toLocation, setToLocation] = useState(null);
   const searchBoxRef = useRef(null);
   const [directionsResult, setDirectionsResult] = useState(null);
+  const [handleDrag, setHandleDrag] = useState(true);
 
   const handleButtonClick = async () => {
     if (fromLocation && toLocation) {
-      const directionsService = new window.google.maps.DirectionsService();
-      const origin = { lat: fromLocation.lat, lng: fromLocation.lng };
-      const destination = { lat: toLocation.lat, lng: toLocation.lng };
-      directionsService.route(
-        {
-          origin: origin,
-          destination: destination,
-          travelMode: "WALKING",
-        },
-        (result, status) => {
-          if (status === window.google.maps.DirectionsStatus.OK) {
-            setDirectionsResult(result);
-          } else {
-            console.error(`error fetching directions ${result}`);
-          }
+      const geocoder = new window.google.maps.Geocoder();
+
+      // Geocode the from location
+      geocoder.geocode({ location: fromLocation }, (results, status) => {
+        if (status === "OK" && results && results.length > 0) {
+          const fromAddress = results[0].formatted_address;
+
+          // Geocode the to location
+          geocoder.geocode({ location: toLocation }, (results, status) => {
+            if (status === "OK" && results && results.length > 0) {
+              const toAddress = results[0].formatted_address;
+
+              const directionsService =
+                new window.google.maps.DirectionsService();
+              const origin = { lat: fromLocation.lat, lng: fromLocation.lng };
+              const destination = { lat: toLocation.lat, lng: toLocation.lng };
+              directionsService.route(
+                {
+                  origin: origin,
+                  destination: destination,
+                  travelMode: "DRIVING",
+                },
+                (result, status) => {
+                  if (status === window.google.maps.DirectionsStatus.OK) {
+                    setDirectionsResult(result);
+                    onAddressChange(
+                      fromAddress,
+                      toAddress,
+                      fromLocation.lat,
+                      fromLocation.lng,
+                      toLocation.lat,
+                      toLocation.lng
+                    );
+                  } else {
+                    console.error(`error fetching directions ${result}`);
+                  }
+                }
+              );
+            } else {
+              console.error(`error geocoding to location ${status}`);
+            }
+          });
+        } else {
+          console.error(`error geocoding from location ${status}`);
         }
-      );
+      });
+
+      setHandleDrag(false);
     }
   };
 
@@ -60,13 +91,17 @@ const MapForm = () => {
     }
   };
 
-  const handlePlacesChanged = () => {
+  const handlePlacesChanged = (from, to) => {
     const places = searchBoxRef.current.state.searchBox.getPlaces();
 
     if (places && places.length > 0) {
-      const { location } = places[0].geometry;
-      const lat = location.lat();
-      const lng = location.lng();
+      const { formatted_address } = places[0];
+      const fromAddress = !fromLocation ? formatted_address : from;
+      const toAddress = fromLocation && !toLocation ? formatted_address : to;
+      const location = places[0].geometry.location;
+      const lat = location ? location.lat() : null;
+      const lng = location ? location.lng() : null;
+
       const newLocation = { lat, lng };
 
       if (!fromLocation) {
@@ -74,99 +109,134 @@ const MapForm = () => {
       } else if (fromLocation && !toLocation) {
         setToLocation(newLocation);
       }
+
+      onAddressChange(
+        fromAddress,
+        toAddress,
+        fromLocation.lat,
+        fromLocation.lng,
+        toLocation.lat,
+        toLocation.lng
+      );
     }
   };
 
+  const handleReset = () => {
+    setFromLocation(null);
+    setToLocation(null);
+    setDirectionsResult(null);
+    setHandleDrag(true);
+    onAddressChange(null, null, null, null, null, null, true);
+  };
+
   return (
-    <div style={{ display: "flex" }}>
-      <div style={{ flex: "1" }}>
-        {/* Add additional content on the left side */}
-      </div>
-      <div style={{ flex: "1", height: "100vh", width: "50%", float: "right" }}>
-        <GoogleMap
-          ref={mapRef}
-          mapContainerStyle={{ height: "100%", width: "100%" }}
-          zoom={15}
-          center={toLocation || fromLocation || { lat: 13.3379, lng: 77.1173 }}
-          onClick={handleMapClick}
+    <div style={style}>
+      <GoogleMap
+        ref={mapRef}
+        mapContainerStyle={{ height: "100%", width: "100%" }}
+        zoom={15}
+        center={toLocation || fromLocation || { lat: 13.3379, lng: 77.1173 }}
+        onClick={handleMapClick}
+      >
+        {fromLocation && (
+          <Marker
+            position={{ lat: fromLocation.lat, lng: fromLocation.lng }}
+            draggable={handleDrag}
+            onDragEnd={(event) => handleMarkerDragEnd(event, "from")}
+            animation={window.google.maps.Animation.DROP}
+            label={{ text: "SOURCE", color: "black" }}
+          />
+        )}
+        {toLocation && (
+          <Marker
+            position={{ lat: toLocation.lat, lng: toLocation.lng }}
+            draggable={handleDrag}
+            onDragEnd={(event) => handleMarkerDragEnd(event, "to")}
+            animation={window.google.maps.Animation.DROP}
+            label={{ text: "DESTINATION", color: "black" }}
+          />
+        )}
+
+        <StandaloneSearchBox
+          ref={searchBoxRef}
+          onPlacesChanged={handlePlacesChanged}
         >
-          {fromLocation && (
-            <Marker
-              position={{ lat: fromLocation.lat, lng: fromLocation.lng }}
-              draggable
-              onDragEnd={(event) => handleMarkerDragEnd(event, "from")}
-              animation={window.google.maps.Animation.DROP}
-              label={{ text: "SOURCE", color: "black" }}
-            />
-          )}
-          {toLocation && (
-            <Marker
-              position={{ lat: toLocation.lat, lng: toLocation.lng }}
-              draggable
-              onDragEnd={(event) => handleMarkerDragEnd(event, "to")}
-              animation={window.google.maps.Animation.DROP}
-              label={{ text: "DESTINATION", color: "black" }}
-            />
-          )}
+          <input
+            type="text"
+            placeholder="Search for a place"
+            style={{
+              boxSizing: "border-box",
+              border: "1px solid transparent",
+              width: "240px",
+              height: "32px",
+              padding: "0 12px",
+              borderRadius: "3px",
+              boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
+              fontSize: "18px",
+              outline: "none",
+              textOverflow: "ellipses",
+              position: "absolute",
+              left: "50%",
+              marginLeft: "-120px",
+              backgroundColor: "#ADD8E6",
+            }}
+          />
+        </StandaloneSearchBox>
 
-          <StandaloneSearchBox
-            ref={searchBoxRef}
-            onPlacesChanged={handlePlacesChanged}
+        {directionsResult && (
+          <DirectionsRenderer
+            directions={directionsResult}
+            options={{ suppressMarkers: true }}
+          />
+        )}
+
+        {fromLocation && toLocation && (
+          <button
+            onClick={handleButtonClick}
+            style={{
+              boxSizing: `border-box`,
+              border: `1px solid transparent`,
+              width: `140px`,
+              height: `32px`,
+              padding: `0 12px`,
+              borderRadius: `3px`,
+              boxShadow: `1px 2px 6px rgba(0, 0, 0, 0.3)`,
+              fontSize: `18px`,
+              outline: `none`,
+              textOverflow: `ellipses`,
+              position: "absolute",
+              left: "78%",
+              marginLeft: "-120px",
+              backgroundColor: "#ADD8E6",
+            }}
           >
-            <input
-              type="text"
-              placeholder="Search for a place"
-              style={{
-                boxSizing: "border-box",
-                border: "1px solid transparent",
-                width: "240px",
-                height: "32px",
-                padding: "0 12px",
-                borderRadius: "3px",
-                boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
-                fontSize: "14px",
-                outline: "none",
-                textOverflow: "ellipses",
-                position: "absolute",
-                left: "50%",
-                marginLeft: "-120px",
-                backgroundColor: "#ADD8E6",
-              }}
-            />
-          </StandaloneSearchBox>
+            Done
+          </button>
+        )}
 
-          {directionsResult && (
-            <DirectionsRenderer
-              directions={directionsResult}
-              options={{ suppressMarkers: true }}
-            />
-          )}
-
-          {fromLocation && toLocation && (
-            <button
-              onClick={handleButtonClick}
-              style={{
-                boxSizing: `border-box`,
-                border: `1px solid transparent`,
-                width: `140px`,
-                height: `32px`,
-                padding: `0 12px`,
-                borderRadius: `3px`,
-                boxShadow: `1px 2px 6px rgba(0, 0, 0, 0.3)`,
-                fontSize: `14px`,
-                outline: `none`,
-                textOverflow: `ellipses`,
-                position: "absolute",
-                left: "78%",
-                marginLeft: "-120px",
-                backgroundColor: "#ADD8E6",
-              }}
-            >
-              Done
-            </button>
-          )}
-        </GoogleMap>
-      </div>
+        <button
+          onClick={handleReset}
+          style={{
+            boxSizing: `border-box`,
+            border: `1px solid transparent`,
+            width: `140px`,
+            height: `32px`,
+            padding: `0 12px`,
+            borderRadius: `3px`,
+            boxShadow: `1px 2px 6px rgba(0, 0, 0, 0.3)`,
+            fontSize: `18px`,
+            outline: `none`,
+            textOverflow: `ellipses`,
+            position: "absolute",
+            right: "4%",
+            marginLeft: "-120px",
+            backgroundColor: "#ADD8E6",
+            color: "red",
+          }}
+        >
+          Reset
+        </button>
+      </GoogleMap>
     </div>
   );
 };

@@ -8,6 +8,11 @@ import Org_Login from "./components/Org_Login";
 import Org_Register from "./components/Org_Register";
 import Commuter_Register from "./components/Commuter_Register";
 import Commuter_Login from "./components/Commuter_Login";
+import Protected_org from "./components/protected_org";
+import Protected_commuter from "./components/protected_commuter";
+import VehicleForm from "./components/VehicleForm";
+import VehicleList from "./components/VehicleList";
+
 function App() {
   return (
     <Routes>
@@ -19,6 +24,10 @@ function App() {
         <Route path="/commuter" element={<Commuter />} />
         <Route path="/commuter/auth/login" element={<Commuter_Login />} />
         <Route path="/commuter/auth/register" element={<Commuter_Register />} />
+        <Route path="/organization/:id" element={<Protected_org />} />
+        <Route path="/commuter/:id" element={<Protected_commuter />} />
+        <Route path="/organization/:id/vehicleForm" element={<VehicleForm />} />
+        <Route path="/commuter/:id/vehicleList" element={<VehicleList />} />
       </Route>
     </Routes>
   );

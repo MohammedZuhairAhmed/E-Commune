@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -36,9 +36,23 @@ const Layout = () => {
               E-Commune
             </Typography>
             <Stack direction="row" spacing={2}>
-              <Button color="inherit">Home</Button>
-              <Button color="inherit">About Us</Button>
-              <Button color="inherit">Contact</Button>
+              <Link to="/">
+                <Button color="inherit" sx={{ color: "white" }}>
+                  Home
+                </Button>
+              </Link>
+
+              <Link to="/about">
+                <Button color="inherit" sx={{ color: "white" }}>
+                  About Us
+                </Button>
+              </Link>
+
+              <Link to="/contact">
+                <Button color="inherit" sx={{ color: "white" }}>
+                  Contact
+                </Button>
+              </Link>
             </Stack>
           </Toolbar>
         </AppBar>

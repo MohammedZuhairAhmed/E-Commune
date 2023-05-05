@@ -7,10 +7,9 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-image: url("https://unsplash.com/photos/-iVNDAOeXn8");
+  background-image: url("https://e0.pxfuel.com/wallpapers/779/896/desktop-wallpaper-transportation-background.jpg");
   background-size: cover;
   background-color: #f2f2f2;
-  margin-top: 6rem;
 `;
 
 const Title = styled.h1`
@@ -24,13 +23,17 @@ const Title = styled.h1`
 const Subtitle = styled.h2`
   font-size: 2rem;
   margin-bottom: 1rem;
-  color: #4a4a4a;
+  color: #000;
+  font-weight: #000;
 `;
 
 const Description = styled.p`
   font-size: 1.5rem;
   margin-bottom: 2rem;
-  color: #4a4a4a;
+  color: #000;
+  align-items: center;
+  font-weight: bold;
+  text-align: center;
 `;
 
 const ButtonWrapper = styled.div`
@@ -75,11 +78,9 @@ const InfoWrapper = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: 6rem;
-  background-color: #f2f2f2;
 `;
 
 const InfoBox = styled.div`
-  background-color: #f2f2f2;
   border-radius: 3px;
   padding: 3rem;
   max-width: 80rem;
@@ -92,15 +93,15 @@ const InfoBox = styled.div`
 
 const InfoTitle = styled.h3`
   font-size: 2rem;
-  margin-bottom: 2rem;
-  color: #4a4a4a;
+  margin: 0em;
   text-align: center;
 `;
 
 const InfoParagraph = styled.p`
   font-size: 1.5rem;
   margin-bottom: 3rem;
-  color: #4a4a4a;
+  color: #000;
+  font-weight: bold;
 `;
 
 const ImageWrapper = styled.div`

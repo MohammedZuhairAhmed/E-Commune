@@ -22,6 +22,7 @@ const VehicleForm = () => {
   const [to, setTo] = useState(null);
   const [fromLocation, setFromLocation] = useState({ lat: null, lng: null });
   const [toLocation, setToLocation] = useState({ lat: null, lng: null });
+  const [number, setNumber] = useState(null);
   // arival and destination time will be added later
 
   const handleAddressChange = (
@@ -137,7 +138,18 @@ const VehicleForm = () => {
                     <MenuItem value={"Bus"}>Bus</MenuItem>
                   </Select>
                 </Grid>
-
+                <Grid item xs={12}>
+                  <TextField
+                    label="Vehicle Number"
+                    placeholder="Vehicle Number"
+                    fullWidth
+                    type="text"
+                    required
+                    variant="standard"
+                    onChange={(e) => setNumber(e.target.value)}
+                    value={number}
+                  />
+                </Grid>
                 <Grid item xs={12}>
                   <TextField
                     label="Number of Seats"

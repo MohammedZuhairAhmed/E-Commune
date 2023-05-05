@@ -7,6 +7,8 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-image: url("https://e0.pxfuel.com/wallpapers/280/129/desktop-wallpaper-black-red-and-white-7-background-for-your-mobile-tablet-explore-red-white-black-red-and-black-designs-white-and.jpg");
+  background-size: cover;
   background-color: #f2f2f2;
 `;
 

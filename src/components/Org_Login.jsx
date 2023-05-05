@@ -47,7 +47,7 @@ function Org_Login() {
     <form onSubmit={handleSubmit}>
       <Grid>
         <Paper
-          elevation={15}
+          elevation={0}
           sx={{
             height: "80vh",
             width: 500,

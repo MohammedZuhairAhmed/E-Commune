@@ -13,6 +13,7 @@ import Protected_commuter from "./components/protected_commuter";
 import VehicleForm from "./components/VehicleForm";
 import VehicleList from "./components/VehicleList";
 import About from "./components/About";
+import Contact from "./components/Contact";
 function App() {
   return (
     <Routes>
@@ -22,6 +23,7 @@ function App() {
         <Route path="/organization/auth/register" element={<Org_Register />} />
         <Route path="/organization/auth/login" element={<Org_Login />} />
         <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/commuter/auth/login" element={<Commuter_Login />} />
         <Route path="/commuter/auth/register" element={<Commuter_Register />} />
         <Route path="/organization/:id" element={<Protected_org />} />

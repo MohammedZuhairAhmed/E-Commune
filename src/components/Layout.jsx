@@ -36,12 +36,23 @@ const Layout = () => {
               E-Commune
             </Typography>
             <Stack direction="row" spacing={2}>
-              <Button color="inherit">Home</Button>
-              <Link to="/about">
-                <Button color="inherit">About Us</Button>
+              <Link to="/">
+                <Button color="inherit" sx={{ color: "white" }}>
+                  Home
+                </Button>
               </Link>
 
-              <Button color="inherit">Contact</Button>
+              <Link to="/about">
+                <Button color="inherit" sx={{ color: "white" }}>
+                  About Us
+                </Button>
+              </Link>
+
+              <Link to="/contact">
+                <Button color="inherit" sx={{ color: "white" }}>
+                  Contact
+                </Button>
+              </Link>
             </Stack>
           </Toolbar>
         </AppBar>

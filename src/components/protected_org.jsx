@@ -1,35 +1,58 @@
-import styled from "styled-components";
-import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import axios from "../api/axios";
-import { Button } from "@mui/material";
+import { Button, Typography, Grid, Paper, Box } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #f2f2f2;
+const Container = styled(Paper)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  minHeight: "100vh",
+  backgroundImage:
+    'url("https://e0.pxfuel.com/wallpapers/280/129/desktop-wallpaper-black-red-and-white-7-background-for-your-mobile-tablet-explore-red-white-black-red-and-black-designs-white-and.jpg")',
+  backgroundSize: "cover",
+  backgroundColor: "#f2f2f2",
+  padding: theme.spacing(4),
+}));
+
+const Title = styled(Typography)(({ theme }) => ({
+  fontSize: "2.5rem",
+  marginBottom: theme.spacing(4),
+  color: "#444444",
+}));
+const CustomButton = styled(Button)`
+  padding: 1rem 2rem;
+  background-color: #d62828;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.2rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #990000;
+  }
 `;
 
-const Title = styled.h1`
-  font-size: 3rem;
-  margin-bottom: 2rem;
-  color: #444444;
-`;
+const Subtitle = styled(Typography)(({ theme }) => ({
+  marginTop: theme.spacing(4),
+  marginBottom: theme.spacing(2),
+  color: "#444444",
+}));
 
-const DataList = styled.ul`
-  list-style-type: none;
-  padding: 0;
-  margin-top: 2rem;
-`;
+const DataList = styled(Grid)(({ theme }) => ({
+  marginTop: theme.spacing(4),
+}));
 
-const DataListItem = styled.li`
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #444444;
-`;
+const DataListItem = styled(Typography)(({ theme }) => ({
+  fontSize: "1.5rem",
+  marginBottom: theme.spacing(2),
+  color: "#444444",
+}));
 
 function Protected_Org() {
   const { id } = useParams();
@@ -60,16 +83,31 @@ function Protected_Org() {
       {!isAuthenticated ? (
         <h1>Not authenticated</h1>
       ) : (
-        <Container>
-          <Title>Welcome to the Protected Organization page</Title>
-          <DataList>
-            <DataListItem>ID: {orgData._id}</DataListItem>
-            <DataListItem>Name: {orgData.name}</DataListItem>
-            <DataListItem>Email: {orgData.email}</DataListItem>
-            <Link to={"/organization/" + orgData._id + "/vehicleForm"}>
-              <Button>Add commute details</Button>
-            </Link>
-          </DataList>
+        <Container elevation={3}>
+          <Box sx={{ maxWidth: "800px", width: "100%" }}>
+            <Title variant="h1">Protected Organization Page</Title>
+            <DataList container>
+              <Grid item xs={12}>
+                <Subtitle variant="h2">Organization Info:</Subtitle>
+              </Grid>
+              <Grid item xs={12}>
+                <DataListItem variant="h3">ID: {orgData?._id}</DataListItem>
+              </Grid>
+              <Grid item xs={12}>
+                <DataListItem variant="h3">Name: {orgData?.name}</DataListItem>
+              </Grid>
+              <Grid item xs={12}>
+                <DataListItem variant="h3">
+                  Email: {orgData?.email}
+                </DataListItem>
+              </Grid>
+              <Grid item xs={12}>
+                <Link to={"/organization/" + orgData?._id + "/vehicleForm"}>
+                  <CustomButton>Add commute details</CustomButton>
+                </Link>
+              </Grid>
+            </DataList>
+          </Box>
         </Container>
       )}
     </>

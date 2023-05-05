@@ -14,7 +14,7 @@ const Container = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 3rem;
+  font-size: 2rem;
   margin-bottom: 2rem;
   color: #444444;
 `;

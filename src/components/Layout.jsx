@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -37,7 +37,10 @@ const Layout = () => {
             </Typography>
             <Stack direction="row" spacing={2}>
               <Button color="inherit">Home</Button>
-              <Button color="inherit">About Us</Button>
+              <Link to="/about">
+                <Button color="inherit">About Us</Button>
+              </Link>
+
               <Button color="inherit">Contact</Button>
             </Stack>
           </Toolbar>

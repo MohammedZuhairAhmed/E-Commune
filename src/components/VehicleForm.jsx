@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   Avatar,
   Button,
@@ -14,7 +15,7 @@ import DirectionsTransitFilledTwoToneIcon from "@mui/icons-material/DirectionsTr
 import axios from "../api/axios";
 import MapForm from "./MapForm";
 
-const VehicleForm = () => {
+function VehicleForm() {
   const [name, setName] = useState(null);
   const [type, setType] = useState("");
   const [seats, setSeats] = useState(null);
@@ -23,6 +24,7 @@ const VehicleForm = () => {
   const [fromLocation, setFromLocation] = useState({ lat: null, lng: null });
   const [toLocation, setToLocation] = useState({ lat: null, lng: null });
   const [number, setNumber] = useState(null);
+  const { id } = useParams();
   // arival and destination time will be added later
 
   const handleAddressChange = (
@@ -48,33 +50,47 @@ const VehicleForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent default form submission behavior
 
-    if (name && type && seats && from && to && fromLocation && toLocation) {
-      // console.log(name, type, seats, from, to, fromLocation, toLocation);
+    if (
+      name &&
+      type &&
+      seats &&
+      from &&
+      to &&
+      fromLocation &&
+      toLocation &&
+      number
+    ) {
+      try {
+        const response = await axios.post(
+          "/vehicle",
+          JSON.stringify({
+            name,
+            type,
+            from,
+            to,
+            fromLat: fromLocation.lat,
+            fromLong: fromLocation.lng,
+            toLat: toLocation.lat,
+            toLong: toLocation.lng,
+            number,
+            orgId: id,
+          }),
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          }
+        );
+        console.log(JSON.stringify(response.data));
+      } catch (err) {
+        if (!err?.response) {
+          alert("No Server Response");
+        } else if (err.response?.status === 409) {
+          alert("vehcile number Taken");
+        } else {
+          alert("vehicle registration Failed");
+        }
+      }
     }
-
-    // try {
-    //   const response = await axios.get(
-    //     "/organization/mapform",
-
-    //     JSON.stringify({ username, password }),
-    //     {
-    //       headers: { "Content-Type": "application/json" },
-    //       withCredentials: true,
-    //     }
-    //   );
-    //   console.log(JSON.stringify(response.data));
-    //   setData(response.data);
-    //   setUsername("");
-    //   setPassword("");
-    //   setData(response.data);
-    //   setIsAuthenticated(true);
-    // } catch (err) {
-    //   if (!err?.response) {
-    //     alert("No Server Response");
-    //   } else {
-    //     alert("Login Failed");
-    //   }
-    // }
   };
   return (
     <div style={{ display: "flex" }}>
@@ -210,6 +226,7 @@ const VehicleForm = () => {
                 disabled={
                   !name ||
                   !type ||
+                  !number ||
                   !seats ||
                   !from ||
                   !to ||
@@ -233,6 +250,6 @@ const VehicleForm = () => {
       />
     </div>
   );
-};
+}
 
 export default VehicleForm;

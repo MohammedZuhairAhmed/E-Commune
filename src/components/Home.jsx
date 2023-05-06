@@ -126,7 +126,7 @@ function Home() {
   return (
     <Container>
       <Title>Welcome to the Home page</Title>
-      <Subtitle>About Us</Subtitle>
+      <Subtitle>Sustainable Commute</Subtitle>
       <Description>
         Our sustainable commute program aims to reduce the carbon footprint of
         our community by encouraging alternative modes of transportation.

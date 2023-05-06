@@ -89,8 +89,16 @@ function Protected_Org() {
               sx={{ fontFamily: "Arial", fontSize: "2.5rem", color: "#444444" }}
               variant="h1"
             >
+              <h1> WELCOME {orgData?.name}</h1>
+            </Title>
+
+            <Title
+              sx={{ fontFamily: "Arial", fontSize: "2.5rem", color: "#444444" }}
+              variant="h1"
+            >
               PROTECTED ORGANISATION PAGE
             </Title>
+
             <DataList container>
               <Grid item xs={12}>
                 <Subtitle variant="h2">Organization Info:</Subtitle>

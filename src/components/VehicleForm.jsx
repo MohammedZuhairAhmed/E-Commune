@@ -103,7 +103,7 @@ function VehicleForm() {
                 width: 500,
                 m: "100px auto",
                 p: 5,
-                backgroundColor: "#DAF5FF",
+                backgroundColor: "#ffffff",
               }}
             >
               <Grid align="center">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
@@ -18,7 +18,7 @@ const Container = styled(Box)`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-image: url("https://img.freepik.com/free-vector/currently-offline-twitch-banner_1361-2645.jpg?w=1380&t=st=1683306258~exp=1683306858~hmac=88e9e3678e3d55bcf631ac636c03ae19c7113a40e33d0497576980b320e695a6");
+  background-image: url("https://lh3.googleusercontent.com/FElZqDfXS54pvRWCaXIuKCl_0Z2SkrTX8_L1Sme9bR3qCvnuVXHDtBLyKV-MXxoCcpsg7FQekwQnk6szxhgdSzVlTTK9W0zqHwgUciWmmZl6RuRppa5nrPe6ffSprS3A3My2jdFL2v-lj1UFQrTzlq63hl74Tm-oCdeuAOOQ-A5QL2yhwt6sXkU9UVS5-ILMIffpDQeFkQ00UUBynqg_QJFEfc_Od19EnffEKHF-3wocUV197cxBg8LqS0G2o012iS8F5ItbVNC-fk0RmI3QBUbcmS2HVcV9mm4WuS5GnfyTVMD27ybCklJbRCmPn45LDLDveRm-vxDgCMnN3FlYYrMHeT2SMI-agF0ZkkMX7jBY3QmJc-5avrqjonH55eeY-Zuq_ZAaanRp_strY80gKNPtnFLE94mw-oAbMnJ4FgianE2fOSfN1MtZN3J-tLN-cgR6Y4LbARhOvB8hbjkezzuYzdC3AYmg15vBHkW3git4IIrYr_SNz2f2POS34VV0C0tKZRW87hqWeoxdDQSoFFf_078tfrRda7eYYutjg0e1Yhvsaie8i556LNU7IVSK3sauNEYQsz6RXUVfHk5qK6UBdRMRoZZLerWpoh2YepvJ8J434zulNrYxYVKg0f9zD6Mk-88De61spX2eYGjHkSL1jcval5ZA6qZCItt3k7HeW_8Jfz40mUddEfkfvMCh-VtTcmRG3eNETdC05KN7mFzFM12qwP1OQM6B5D8kzltNFvIRDpuHkkpgU6GZTEO2SnxyXpCJyUOydz0rcZ2B2zFCMNuQMiMZvIcUhwvX-BANf3fcnArf8JJUIgd5MnLmYoP-yBSb08Q_rnr3ycSZZM_rqFz-HIlXKktezhfk8pucoYN11Y7ckpVlyeH1sM3frLJrZaq6Erv6HaqMERxP0XMsIP-DVTbpWO24oH3uJYTq3hPHZTAXcMHph3PUhtbNZuN9x-xJ50mLDvwSln0j-NDYDD-AX3IxXGRHqifd2N0mD2f3WRZ3iw=w720-h360-s-no?authuser=0");
   background-size: cover;
   background-color: #f2f2f2;
 `;

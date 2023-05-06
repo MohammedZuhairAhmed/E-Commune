@@ -91,7 +91,7 @@ const VehicleForm = () => {
               }}
             >
               <Grid align="center">
-                <Avatar sx={{ bgcolor: "#00e1ff", width: 70, height: 70 }}>
+                <Avatar sx={{ bgcolor: "#d62828", width: 70, height: 70 }}>
                   <DirectionsTransitFilledTwoToneIcon
                     sx={{ width: 70, height: 70 }}
                   />
@@ -192,7 +192,21 @@ const VehicleForm = () => {
                 type="submit"
                 variant="contained"
                 fullWidth
-                sx={{ m: "20px 0", p: 1 }}
+                sx={{
+                  m: "20px 0",
+                  p: 1,
+                  backgroundColor: "#444444",
+                  color: "#ffffff",
+                  border: "none",
+                  borderRadius: 4,
+                  fontSize: "1.2rem",
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease-in-out",
+                  "&:hover": {
+                    backgroundColor: "#363636",
+                  },
+                }}
                 disabled={
                   !name ||
                   !type ||

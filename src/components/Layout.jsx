@@ -8,6 +8,9 @@ import {
   Button,
   TableFooter,
 } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGoogle } from "@fortawesome/free-brands-svg-icons";
+
 import DirectionsTransitFilledTwoToneIcon from "@mui/icons-material/DirectionsTransitFilledTwoTone";
 
 const Layout = () => {
@@ -70,27 +73,34 @@ const Layout = () => {
           &copy; E-Commune {today.getFullYear()} | All Rights Reserved
         </p>
         <Stack direction="row" spacing={2} justifyContent="center">
-          <Button
-            variant="contained"
-            sx={{ backgroundColor: "#3b5998", color: "#fff" }}
-            startIcon={<i className="fab fa-facebook-f"></i>}
-          >
-            Facebook
-          </Button>
-          <Button
-            variant="contained"
-            sx={{ backgroundColor: "#55acee", color: "#fff" }}
-            startIcon={<i className="fab fa-twitter"></i>}
-          >
-            Twitter
-          </Button>
-          <Button
-            variant="contained"
-            sx={{ backgroundColor: "#dd4b39", color: "#fff" }}
-            startIcon={<i className="fab fa-google"></i>}
-          >
-            Google
-          </Button>
+          <Link to="https://www.facebook.com/">
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "#3b5998", color: "#fff" }}
+              startIcon={<i className="fab fa-facebook-f"></i>}
+            >
+              Facebook
+            </Button>
+          </Link>
+          <Link to="https://www.twitter.com/">
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "#55acee", color: "#fff" }}
+              startIcon={<i className="fab fa-twitter"></i>}
+            >
+              Twitter
+            </Button>
+          </Link>
+
+          <Link to="https://www.google.com/">
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "#dd4b39", color: "#fff" }}
+              startIcon={<i className="fab fa-google"></i>}
+            >
+              Google
+            </Button>
+          </Link>
         </Stack>
       </TableFooter>
     </div>

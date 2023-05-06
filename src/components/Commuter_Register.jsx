@@ -9,9 +9,15 @@ import {
   Paper,
   TextField,
   Typography,
+  // Select,
+  // MenuItem,
+  // InputLabel,
+  // ListItemText,
+  // ListItem,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import axios from "../api/axios";
+import SelectButton from "./SelectButton";
 const Container = styled(Box)`
   display: flex;
   flex-direction: column;
@@ -34,6 +40,9 @@ function Commuter_Register() {
   const [conPassword, setConPassword] = useState("");
   const [conPasswordError, setConPasswordError] = useState(false);
   const [conPasswordErrorMsg, setConPasswordErrorMsg] = useState("");
+  // const [org, setOrg] = useState(null);
+  // const [selectedOrg, setSelectedOrg] = useState("");
+  // const [orgId, setOrgId] = useState(null);
 
   useEffect(() => {
     if (password.length === 0) {
@@ -85,6 +94,19 @@ function Commuter_Register() {
     setConPasswordErrorMsg(conHasError ? conErrorMsg : null);
   }, [password, conPassword]);
 
+  // useEffect(() => {
+  //   async function fetchOrgs() {
+  //     try {
+  //       const response = await axios.get("/organization");
+  //       setOrg(response.data);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   }
+
+  //   fetchOrgs();
+  // }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent default form submission behavior
 
@@ -110,6 +132,15 @@ function Commuter_Register() {
       }
     }
   };
+
+  // const handleOrg = (id, name) => {
+  //   setSelectedOrg(name);
+  //   setOrgId(id);
+  // };
+
+  // useEffect(() => {
+  //   console.log(selectedOrg);
+  // }, [selectedOrg]);
 
   return (
     <Container>
@@ -194,6 +225,42 @@ function Commuter_Register() {
                   onChange={(e) => setEmail(e.target.value)}
                   value={email}
                 />
+              </Grid>
+
+              {/* <Grid item xs={12}>
+                <InputLabel id="organization-type-label">
+                  Organization
+                </InputLabel>
+                <Select
+                  labelId="organization-type-label"
+                  id="organization-type-select"
+                  value={selectedOrg}
+                  fullWidth
+                  required
+                  variant="standard"
+                  displayEmpty
+                  onChange={(e) => setSelectedOrg(e.target.value)}
+                >
+                  <MenuItem value="" disabled>
+                    Select Organization
+                  </MenuItem>
+                  {org &&
+                    org.map((organization) => (
+                      <ListItem
+                        key={organization.id}
+                        onClick={() =>
+                          handleOrg(organization.id, organization.name)
+                        }
+                      >
+                        <ListItemText primary={organization.name} />
+                      </ListItem>
+                    ))}
+                </Select>
+                
+              </Grid> */}
+
+              <Grid item xs={12}>
+                <SelectButton />
               </Grid>
 
               <Grid item xs={12}>

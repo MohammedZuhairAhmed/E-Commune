@@ -116,7 +116,7 @@ function Commuter_Register() {
       <form onSubmit={handleSubmit}>
         <Grid>
           <Paper
-            elevation={0}
+            elevation={15}
             sx={{
               height: "105vh",
               width: 500,

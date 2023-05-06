@@ -114,7 +114,7 @@ function Org_Register() {
       <form onSubmit={handleSubmit}>
         <Grid>
           <Paper
-            elevation={0}
+            elevation={15}
             sx={{
               height: "100vh",
               width: 500,

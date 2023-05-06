@@ -50,7 +50,7 @@ const VehicleList = () => {
   ];
 
   return (
-    <div>
+    <div style={{ marginBottom: "15rem" }}>
       <h1>VehicleList</h1>
       <Table>
         <TableHead sx={{ color: "red", backgroundColor: "#d62828" }}>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Avatar,
@@ -13,6 +13,9 @@ import {
 } from "@mui/material";
 import DirectionsTransitFilledTwoToneIcon from "@mui/icons-material/DirectionsTransitFilledTwoTone";
 import axios from "../api/axios";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import MapForm from "./MapForm";
 
 function VehicleForm() {
@@ -24,8 +27,11 @@ function VehicleForm() {
   const [fromLocation, setFromLocation] = useState({ lat: null, lng: null });
   const [toLocation, setToLocation] = useState({ lat: null, lng: null });
   const [number, setNumber] = useState(null);
+  const [arrival, setArrival] = useState(null);
+  const [depart, setDepart] = useState(null);
+  const arrivalTimeRef = useRef(null);
+  const departTimeRef = useRef(null);
   const { id } = useParams();
-  // arival and destination time will be added later
 
   const handleAddressChange = (
     from,
@@ -50,6 +56,15 @@ function VehicleForm() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent default form submission behavior
 
+    setArrival(
+      new Date(
+        arrivalTimeRef.current.querySelector("input").value
+      ).toISOString()
+    );
+    setDepart(
+      new Date(departTimeRef.current.querySelector("input").value).toISOString()
+    );
+
     if (
       name &&
       type &&
@@ -58,7 +73,9 @@ function VehicleForm() {
       to &&
       fromLocation &&
       toLocation &&
-      number
+      number &&
+      arrival &&
+      depart
     ) {
       try {
         const response = await axios.post(
@@ -74,6 +91,8 @@ function VehicleForm() {
             toLong: toLocation.lng,
             number,
             orgId: id,
+            arrivalTime: arrival,
+            departureTime: depart,
           }),
           {
             headers: { "Content-Type": "application/json" },
@@ -202,6 +221,30 @@ function VehicleForm() {
                     onChange={(e) => setTo(e.target.value)}
                   />
                 </Grid>
+
+                <Grid item xs={12}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker
+                      label="Arrival Time"
+                      fullWidth
+                      required
+                      defaultValue={arrival}
+                      ref={arrivalTimeRef}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker
+                      label="Departure Time"
+                      fullWidth
+                      required
+                      value={depart}
+                      ref={departTimeRef}
+                    />
+                  </LocalizationProvider>
+                </Grid>
               </Grid>
 
               <Button
@@ -246,7 +289,7 @@ function VehicleForm() {
       </div>
       <MapForm
         onAddressChange={handleAddressChange}
-        style={{ flex: "1", height: "100vh", width: "50%", float: "right" }}
+        style={{ flex: "1", height: "125vh", width: "50%", float: "right" }}
       />
     </div>
   );

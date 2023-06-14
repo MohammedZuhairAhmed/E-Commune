@@ -1,10 +1,42 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import {
   GoogleMap,
   Marker,
   StandaloneSearchBox,
   DirectionsRenderer,
 } from "@react-google-maps/api";
+
+// Example usage
+const pickupPoints = [
+  { lat: 13.332625, lng: 77.125979 },
+  { lat: 13.329661, lng: 77.116881 },
+  { lat: 13.331665, lng: 77.113694 },
+];
+
+// Define the waypoints array
+const waypoints = pickupPoints.map((pickupPoint) => ({
+  location: new window.google.maps.LatLng(pickupPoint.lat, pickupPoint.lng),
+  stopover: true,
+}));
+
+const getCurrentLocation = () => {
+  return new Promise((resolve, reject) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const currentLocation = { lat: latitude, lng: longitude };
+          resolve(currentLocation);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    } else {
+      reject(new Error("Geolocation is not supported by this browser."));
+    }
+  });
+};
 
 const MapForm = ({ style, onAddressChange }) => {
   const mapRef = useRef(null);
@@ -13,6 +45,7 @@ const MapForm = ({ style, onAddressChange }) => {
   const searchBoxRef = useRef(null);
   const [directionsResult, setDirectionsResult] = useState(null);
   const [handleDrag, setHandleDrag] = useState(true);
+  const [currentLocation, setCurrentLocation] = useState(null);
 
   const handleButtonClick = async () => {
     if (fromLocation && toLocation) {
@@ -36,6 +69,8 @@ const MapForm = ({ style, onAddressChange }) => {
                 {
                   origin: origin,
                   destination: destination,
+                  waypoints: waypoints,
+                  optimizeWaypoints: true,
                   travelMode: "DRIVING",
                 },
                 (result, status) => {
@@ -129,6 +164,19 @@ const MapForm = ({ style, onAddressChange }) => {
     onAddressChange(null, null, null, null, null, null, true);
   };
 
+  useEffect(() => {
+    const fetchCurrentLocation = async () => {
+      try {
+        const currentLocation = await getCurrentLocation();
+        setCurrentLocation(currentLocation);
+      } catch (error) {
+        console.error("Error fetching current location:", error);
+      }
+    };
+
+    fetchCurrentLocation();
+  }, []);
+
   return (
     <div style={style}>
       <GoogleMap
@@ -138,6 +186,30 @@ const MapForm = ({ style, onAddressChange }) => {
         center={toLocation || fromLocation || { lat: 13.3379, lng: 77.1173 }}
         onClick={handleMapClick}
       >
+        {currentLocation && (
+          <Marker
+            position={currentLocation}
+            icon={{
+              url: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png",
+              scaledSize: new window.google.maps.Size(32, 32),
+            }}
+          />
+        )}
+        {pickupPoints.map((pickupPoint, index) => (
+          <Marker
+            key={index}
+            position={pickupPoint}
+            icon={{
+              url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+              scaledSize: new window.google.maps.Size(32, 32),
+            }}
+            draggable={handleDrag}
+            onDragEnd={(event) => handleMarkerDragEnd(event, "pickup")}
+            animation={window.google.maps.Animation.DROP}
+            label={{ text: `P${index + 1}`, color: "black" }}
+          />
+        ))}
+
         {fromLocation && (
           <Marker
             position={{ lat: fromLocation.lat, lng: fromLocation.lng }}

@@ -32,123 +32,70 @@ const Org_mapform = ({ style, onAddressChange }) => {
   const searchBoxRef = useRef(null);
   const [directionsResult, setDirectionsResult] = useState(null);
   const [handleDrag, setHandleDrag] = useState(true);
-
+  const [lat,setLat] = useState(null);
+  const [lng,setLng] = useState(null);
 
   const handleButtonClick = async () => {
-    if (fromLocation && toLocation) {
-      const geocoder = new window.google.maps.Geocoder();
-
-      // Geocode the from location
-      geocoder.geocode({ location: fromLocation }, (results, status) => {
-        if (status === "OK" && results && results.length > 0) {
-          const fromAddress = results[0].formatted_address;
-
-          // Geocode the to location
-          geocoder.geocode({ location: toLocation }, (results, status) => {
-            if (status === "OK" && results && results.length > 0) {
-              const toAddress = results[0].formatted_address;
-
-              const directionsService =
-                new window.google.maps.DirectionsService();
-              const origin = { lat: fromLocation.lat, lng: fromLocation.lng };
-              const destination = { lat: toLocation.lat, lng: toLocation.lng };
-              directionsService.route(
-                {
-                  origin: origin,
-                  destination: destination,
-                  waypoints: waypoints,
-                  optimizeWaypoints: true,
-                  travelMode: "DRIVING",
-                },
-                (result, status) => {
-                  if (status === window.google.maps.DirectionsStatus.OK) {
-                    setDirectionsResult(result);
-                    onAddressChange(
-                      fromAddress,
-                      toAddress,
-                      fromLocation.lat,
-                      fromLocation.lng,
-                      toLocation.lat,
-                      toLocation.lng
-                    );
-                  } else {
-                    console.error(`error fetching directions ${result}`);
-                  }
-                }
-              );
-            } else {
-              console.error(`error geocoding to location ${status}`);
-            }
-          });
-        } else {
-          console.error(`error geocoding from location ${status}`);
-        }
-      });
-
+    if (source) {
+      onAddressChange(
+        source,
+        lat,
+        lng
+      );
       setHandleDrag(false);
     }
   };
 
   const handleMapClick = (event) => {
     const { latLng } = event;
-    const lat = latLng.lat();
-    const lng = latLng.lng();
+    const lt = latLng.lat();
+    const lg = latLng.lng();
 
-    if (!fromLocation) {
-      setFromLocation({ lat, lng });
-    } else if (!toLocation) {
-      setToLocation({ lat, lng });
+    if (!source) {
+      setLat(lt);
+      setLng(lg);
     }
   };
 
-  const handleMarkerDragEnd = (event, markerType) => {
+  const handleMarkerDragEnd = (event) => {
     const { latLng } = event;
-    const lat = latLng.lat();
-    const lng = latLng.lng();
+    const lt = latLng.lat();
+    const lg = latLng.lng();
 
-    if (markerType === "from") {
-      setFromLocation({ lat, lng });
-    } else if (markerType === "to") {
-      setToLocation({ lat, lng });
-    }
+    setLat(lt);
+    setLng(lg);
+
   };
 
-  const handlePlacesChanged = (from, to) => {
+  const handlePlacesChanged = () => {
     const places = searchBoxRef.current.state.searchBox.getPlaces();
 
     if (places && places.length > 0) {
       const { formatted_address } = places[0];
-      const fromAddress = !fromLocation ? formatted_address : from;
-      const toAddress = fromLocation && !toLocation ? formatted_address : to;
+     // const source = !fromLocation ? formatted_address : from;
       const location = places[0].geometry.location;
       const lat = location ? location.lat() : null;
       const lng = location ? location.lng() : null;
 
-      const newLocation = { lat, lng };
+      setSource(source)
+      setLat(lat);
+      setLng(lng);
 
-      if (!fromLocation) {
-        setFromLocation(newLocation);
-      } else if (fromLocation && !toLocation) {
-        setToLocation(newLocation);
-      }
 
       onAddressChange(
-        fromAddress,
-        toAddress,
-        fromLocation.lat,
-        fromLocation.lng,
-        toLocation.lat,
-        toLocation.lng
+        source,
+        lat,
+        lng
       );
     }
   };
 
   const handleReset = () => {
-    setFromLocation(null);
-    setToLocation(null);
-    setDirectionsResult(null);
+    setSource(null);
+    setLat(null);
+    setLng(null);
     setHandleDrag(true);
-    onAddressChange(null, null, null, null, null, null, true);
+    onAddressChange(null, null, null,true);
   };
 
   // useEffect(() => {
@@ -170,7 +117,7 @@ const Org_mapform = ({ style, onAddressChange }) => {
         ref={mapRef}
         mapContainerStyle={{ height: "100%", width: "100%" }}
         zoom={15}
-        center={toLocation || fromLocation || { lat: 13.3379, lng: 77.1173 }}
+        center={{ lat: 13.3379, lng: 77.1173 }}
         onClick={handleMapClick}
       >
         {/* {currentLocation && (
@@ -182,37 +129,14 @@ const Org_mapform = ({ style, onAddressChange }) => {
             }}
           />
         )} */}
-        {pickupPoints.map((pickupPoint, index) => (
-          <Marker
-            key={index}
-            position={pickupPoint}
-            icon={{
-              url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-              scaledSize: new window.google.maps.Size(32, 32),
-            }}
-            draggable={handleDrag}
-            onDragEnd={(event) => handleMarkerDragEnd(event, "pickup")}
-            animation={window.google.maps.Animation.DROP}
-            label={{ text: `P${index + 1}`, color: "black" }}
-          />
-        ))}
 
-        {fromLocation && (
+        {source && (
           <Marker
-            position={{ lat: fromLocation.lat, lng: fromLocation.lng }}
+            position={{ lat: lat, lng: lng }}
             draggable={handleDrag}
-            onDragEnd={(event) => handleMarkerDragEnd(event, "from")}
+            onDragEnd={(event) => handleMarkerDragEnd(event)}
             animation={window.google.maps.Animation.DROP}
             label={{ text: "SOURCE", color: "black" }}
-          />
-        )}
-        {toLocation && (
-          <Marker
-            position={{ lat: toLocation.lat, lng: toLocation.lng }}
-            draggable={handleDrag}
-            onDragEnd={(event) => handleMarkerDragEnd(event, "to")}
-            animation={window.google.maps.Animation.DROP}
-            label={{ text: "DESTINATION", color: "black" }}
           />
         )}
 
@@ -242,14 +166,8 @@ const Org_mapform = ({ style, onAddressChange }) => {
           />
         </StandaloneSearchBox>
 
-        {directionsResult && (
-          <DirectionsRenderer
-            directions={directionsResult}
-            options={{ suppressMarkers: true }}
-          />
-        )}
 
-        {fromLocation && toLocation && (
+        {source && (
           <button
             onClick={handleButtonClick}
             style={{

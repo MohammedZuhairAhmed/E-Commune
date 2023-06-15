@@ -6,18 +6,6 @@ import {
   DirectionsRenderer,
 } from "@react-google-maps/api";
 
-// Example usage
-const pickupPoints = [
-  { lat: 13.332625, lng: 77.125979 },
-  { lat: 13.329661, lng: 77.116881 },
-  { lat: 13.331665, lng: 77.113694 },
-];
-
-// Define the waypoints array
-const waypoints = pickupPoints.map((pickupPoint) => ({
-  location: new window.google.maps.LatLng(pickupPoint.lat, pickupPoint.lng),
-  stopover: true,
-}));
 
 // const getCurrentLocation = () => {
 //   return new Promise((resolve, reject) => {
@@ -38,14 +26,13 @@ const waypoints = pickupPoints.map((pickupPoint) => ({
 //   });
 // };
 
-const MapForm = ({ style, onAddressChange }) => {
+const Org_mapform = ({ style, onAddressChange }) => {
   const mapRef = useRef(null);
-  const [fromLocation, setFromLocation] = useState(null);
-  const [toLocation, setToLocation] = useState(null);
+  const [source, setSource] = useState(null);
   const searchBoxRef = useRef(null);
   const [directionsResult, setDirectionsResult] = useState(null);
   const [handleDrag, setHandleDrag] = useState(true);
-  // const [currentLocation, setCurrentLocation] = useState(null);
+
 
   const handleButtonClick = async () => {
     if (fromLocation && toLocation) {
@@ -313,4 +300,4 @@ const MapForm = ({ style, onAddressChange }) => {
   );
 };
 
-export default MapForm;
+export default Org_mapform;

@@ -25,7 +25,7 @@ import {
 //   });
 // };
 
-const Org_mapform = ({ style, onAddressChange }) => {
+const Reg_mapform = ({ style, onAddressChange }) => {
   const mapRef = useRef(null);
   const [source, setSource] = useState(null);
   const [sourceLocation,setSourceLocation] = useState(null);
@@ -246,4 +246,4 @@ const Org_mapform = ({ style, onAddressChange }) => {
   );
 };
 
-export default Org_mapform;
+export default Reg_mapform;

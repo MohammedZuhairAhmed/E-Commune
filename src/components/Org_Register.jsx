@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
 import {
   Avatar,
   Button,
@@ -11,10 +10,8 @@ import {
   InputLabel,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Org_mapform from "./Org_mapform";
+import Reg_mapform from "./Reg_mapform";
 import axios from "../api/axios";
-
-
 
 function Org_Register() {
   const [name, setName] = useState("");
@@ -27,8 +24,7 @@ function Org_Register() {
   const [conPasswordError, setConPasswordError] = useState(false);
   const [conPasswordErrorMsg, setConPasswordErrorMsg] = useState("");
   const [source,setSource] = useState(null);
-  const [lat,setLat] = useState(null);
-  const [lng,setLng] = useState(null);
+  const [location,setLocation] = useState(null);
 
   const handleAddressChange = (
     source,
@@ -37,11 +33,10 @@ function Org_Register() {
     reset = false
   ) => {
     setSource(source);
-    setLat(lat);
-    setLng(lng);
+    setLocation({ lat: lat, lng: lng });
 
     if (reset) {
-      setSource(source);
+      setSource("");
     }
   };
 
@@ -97,12 +92,14 @@ function Org_Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent default form submission behavior
+    console.log(location.lat,location.lng);
 
+    
     try {
       const response = await axios.post(
         "/organization/auth/register",
 
-        JSON.stringify({ name, email, number, password }),
+        JSON.stringify({ name, email, number, password , latitude : location.lat,longitude : location.lng}),
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -273,7 +270,7 @@ function Org_Register() {
         </Grid>
       </form>
       </div>
-      <Org_mapform
+      <Reg_mapform
         onAddressChange={handleAddressChange}
         style={{ flex: "1", height: "125vh", width: "50%", float: "right" }}
       />

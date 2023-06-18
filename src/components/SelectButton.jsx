@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "../api/axios";
 
-const SelectButton = () => {
+const SelectButton = ({ onOrgIDChange }) => {
   const [selectedValue, setSelectedValue] = useState("");
   const [org, setOrg] = useState([]);
 
@@ -17,8 +17,11 @@ const SelectButton = () => {
 
     fetchOrgs();
   }, []);
+
   const handleSelectChange = (e) => {
-    setSelectedValue(e.target.value);
+    const selectedOrgId = e.target.value;
+    setSelectedValue(selectedOrgId);
+    onOrgIDChange(selectedOrgId);
   };
 
   return (
@@ -31,12 +34,11 @@ const SelectButton = () => {
       >
         <option value="">--Select--</option>
         {org.map((organization) => (
-          <option key={organization.id} value={organization.id}>
+          <option key={organization._id} value={organization._id}>
             {organization.name}
           </option>
         ))}
       </select>
-      {/* {selectedValue && <p>You selected: {selectedValue}</p>} */}
     </div>
   );
 };

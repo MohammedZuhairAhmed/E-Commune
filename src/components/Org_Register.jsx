@@ -23,15 +23,10 @@ function Org_Register() {
   const [conPassword, setConPassword] = useState("");
   const [conPasswordError, setConPasswordError] = useState(false);
   const [conPasswordErrorMsg, setConPasswordErrorMsg] = useState("");
-  const [source,setSource] = useState(null);
-  const [location,setLocation] = useState(null);
+  const [source, setSource] = useState(null);
+  const [location, setLocation] = useState(null);
 
-  const handleAddressChange = (
-    source,
-    lat,
-    lng,
-    reset = false
-  ) => {
+  const handleAddressChange = (source, lat, lng, reset = false) => {
     setSource(source);
     setLocation({ lat: lat, lng: lng });
 
@@ -92,14 +87,19 @@ function Org_Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent default form submission behavior
-    console.log(location.lat,location.lng);
 
-    
     try {
       const response = await axios.post(
         "/organization/auth/register",
 
-        JSON.stringify({ name, email, number, password , latitude : location.lat,longitude : location.lng}),
+        JSON.stringify({
+          name,
+          email,
+          number,
+          password,
+          lat: location.lat,
+          lng: location.lng,
+        }),
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -121,97 +121,100 @@ function Org_Register() {
   return (
     <div style={{ display: "flex" }}>
       <div style={{ flex: "1" }}>
-      <form onSubmit={handleSubmit}>
-        <Grid>
-          <Paper
-            elevation={15}
-            sx={{
-              height: "100vh",
-              width: 500,
-              m: "auto",
-              mt: "100px",
-              p: 5,
-              backgroundColor: "#ffffff",
-            }}
-          >
-            <Grid align="center">
-              <Avatar sx={{ bgcolor: "#d62828", width: 70, height: 70 }}>
-                <LockOutlinedIcon sx={{ width: 30, height: 30 }} />
-              </Avatar>
-              <Typography variant="h4" sx={{ paddingTop: 2, marginBottom: 2 }}>
-                Register
-              </Typography>
-            </Grid>
-
-            <Grid container rowSpacing={3} spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  label="Organization Name"
-                  placeholder="Organization Name"
-                  fullWidth
-                  required
-                  variant="standard"
-                  onChange={(e) => setName(e.target.value)}
-                  value={name}
-                />
+        <form onSubmit={handleSubmit}>
+          <Grid>
+            <Paper
+              elevation={15}
+              sx={{
+                height: "100vh",
+                width: 500,
+                m: "auto",
+                mt: "100px",
+                p: 5,
+                backgroundColor: "#ffffff",
+              }}
+            >
+              <Grid align="center">
+                <Avatar sx={{ bgcolor: "#d62828", width: 70, height: 70 }}>
+                  <LockOutlinedIcon sx={{ width: 30, height: 30 }} />
+                </Avatar>
+                <Typography
+                  variant="h4"
+                  sx={{ paddingTop: 2, marginBottom: 2 }}
+                >
+                  Register
+                </Typography>
               </Grid>
 
-              <Grid item xs={12}>
-                <TextField
-                  label="E-Mail"
-                  placeholder="E-Mail"
-                  type="email"
-                  fullWidth
-                  required
-                  variant="standard"
-                  onChange={(e) => setEmail(e.target.value)}
-                  value={email}
-                />
-              </Grid>
+              <Grid container rowSpacing={3} spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Organization Name"
+                    placeholder="Organization Name"
+                    fullWidth
+                    required
+                    variant="standard"
+                    onChange={(e) => setName(e.target.value)}
+                    value={name}
+                  />
+                </Grid>
 
-              <Grid item xs={12}>
-                <TextField
-                  label="Mobile Number"
-                  placeholder="Mobile Number"
-                  fullWidth
-                  required
-                  variant="standard"
-                  onChange={(e) => setNumber(e.target.value)}
-                  value={number}
-                />
-              </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="E-Mail"
+                    placeholder="E-Mail"
+                    type="email"
+                    fullWidth
+                    required
+                    variant="standard"
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                  />
+                </Grid>
 
-              <Grid item xs={12}>
-                <TextField
-                  error={passwordError}
-                  helperText={passwordErrorMsg}
-                  label="Password"
-                  placeholder="Password"
-                  type="password"
-                  fullWidth
-                  required
-                  variant="standard"
-                  onChange={(e) => setPassword(e.target.value)}
-                  value={password}
-                />
-              </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Mobile Number"
+                    placeholder="Mobile Number"
+                    fullWidth
+                    required
+                    variant="standard"
+                    onChange={(e) => setNumber(e.target.value)}
+                    value={number}
+                  />
+                </Grid>
 
-              <Grid item xs={12}>
-                <TextField
-                  error={conPasswordError}
-                  helperText={conPasswordErrorMsg}
-                  label="Confirm Password"
-                  placeholder="Confirm Password"
-                  type="password"
-                  fullWidth
-                  required
-                  variant="standard"
-                  onChange={(e) => setConPassword(e.target.value)}
-                  value={conPassword}
-                />
-              </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    error={passwordError}
+                    helperText={passwordErrorMsg}
+                    label="Password"
+                    placeholder="Password"
+                    type="password"
+                    fullWidth
+                    required
+                    variant="standard"
+                    onChange={(e) => setPassword(e.target.value)}
+                    value={password}
+                  />
+                </Grid>
 
-              <Grid item xs={12}>
+                <Grid item xs={12}>
+                  <TextField
+                    error={conPasswordError}
+                    helperText={conPasswordErrorMsg}
+                    label="Confirm Password"
+                    placeholder="Confirm Password"
+                    type="password"
+                    fullWidth
+                    required
+                    variant="standard"
+                    onChange={(e) => setConPassword(e.target.value)}
+                    value={conPassword}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
                   <InputLabel htmlFor="Address">Address</InputLabel>
                   <TextField
                     id="address"
@@ -222,60 +225,59 @@ function Org_Register() {
                     onChange={(e) => setSource(e.target.value)}
                   />
                 </Grid>
-            </Grid>
-
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              sx={{
-                m: "20px 0",
-                p: 1,
-                backgroundColor: "#444444",
-                color: "#ffffff",
-                border: "none",
-                borderRadius: 4,
-                fontSize: "1.2rem",
-                textDecoration: "none",
-                cursor: "pointer",
-                transition: "all 0.3s ease-in-out",
-                "&:hover": {
-                  backgroundColor: "#363636",
-                },
-              }}
-            >
-              SUBMIT
-            </Button>
-
-            <Grid container>
-              <Grid item xs={4}>
-                <Typography
-                  variant="body1"
-                  sx={{ left: 0, bottom: 0, textAlign: "left" }}
-                >
-                  &lt;<Link to="/organization">Home</Link>
-                </Typography>
               </Grid>
-              <Grid item xs={8}>
-                <Typography
-                  variant="body1"
-                  sx={{ right: 0, bottom: 0, textAlign: "right" }}
-                >
-                  Already have an account ?
-                  <Link to="/organization/auth/login">Sign in</Link>
-                </Typography>
+
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                sx={{
+                  m: "20px 0",
+                  p: 1,
+                  backgroundColor: "#444444",
+                  color: "#ffffff",
+                  border: "none",
+                  borderRadius: 4,
+                  fontSize: "1.2rem",
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease-in-out",
+                  "&:hover": {
+                    backgroundColor: "#363636",
+                  },
+                }}
+              >
+                SUBMIT
+              </Button>
+
+              <Grid container>
+                <Grid item xs={4}>
+                  <Typography
+                    variant="body1"
+                    sx={{ left: 0, bottom: 0, textAlign: "left" }}
+                  >
+                    &lt;<Link to="/organization">Home</Link>
+                  </Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  <Typography
+                    variant="body1"
+                    sx={{ right: 0, bottom: 0, textAlign: "right" }}
+                  >
+                    Already have an account ?
+                    <Link to="/organization/auth/login">Sign in</Link>
+                  </Typography>
+                </Grid>
               </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
-      </form>
+            </Paper>
+          </Grid>
+        </form>
       </div>
       <Reg_mapform
         onAddressChange={handleAddressChange}
         style={{ flex: "1", height: "125vh", width: "50%", float: "right" }}
       />
     </div>
-
   );
 }
 

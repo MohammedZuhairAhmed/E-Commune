@@ -1,10 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import {
-  GoogleMap,
-  Marker,
-  StandaloneSearchBox,
-} from "@react-google-maps/api";
-
+import { GoogleMap, Marker, StandaloneSearchBox } from "@react-google-maps/api";
 
 // const getCurrentLocation = () => {
 //   return new Promise((resolve, reject) => {
@@ -28,27 +23,29 @@ import {
 const Reg_mapform = ({ style, onAddressChange }) => {
   const mapRef = useRef(null);
   const [source, setSource] = useState(null);
-  const [sourceLocation,setSourceLocation] = useState(null);
+  const [sourceLocation, setSourceLocation] = useState(null);
   const searchBoxRef = useRef(null);
   const [handleDrag, setHandleDrag] = useState(true);
 
   const handleButtonClick = async () => {
     if (sourceLocation) {
       const geocoder = new window.google.maps.Geocoder();
-  
+
       // Geocode the location
-      geocoder.geocode({ location: { lat: sourceLocation.lat, lng: sourceLocation.lng } }, (results, status) => {
-        if (status === "OK" && results && results.length > 0) {
-          const source = results[0].formatted_address;
-          onAddressChange(source, sourceLocation.lat, sourceLocation.lng);
-          setHandleDrag(false);
-        } else {
-          console.error(`Error geocoding location: ${status}`);
+      geocoder.geocode(
+        { location: { lat: sourceLocation.lat, lng: sourceLocation.lng } },
+        (results, status) => {
+          if (status === "OK" && results && results.length > 0) {
+            const source = results[0].formatted_address;
+            onAddressChange(source, sourceLocation.lat, sourceLocation.lng);
+            setHandleDrag(false);
+          } else {
+            console.error(`Error geocoding location: ${status}`);
+          }
         }
-      });
+      );
     }
   };
-  
 
   const handleMapClick = (event) => {
     const { latLng } = event;
@@ -66,7 +63,6 @@ const Reg_mapform = ({ style, onAddressChange }) => {
     const lng = latLng.lng();
 
     setSourceLocation({ lat, lng });
-
   };
 
   // const handlePlacesChanged = () => {
@@ -83,7 +79,6 @@ const Reg_mapform = ({ style, onAddressChange }) => {
   //     setLat(lat);
   //     setLng(lng);
 
-
   //     onAddressChange(
   //       source,
   //       lat,
@@ -94,35 +89,30 @@ const Reg_mapform = ({ style, onAddressChange }) => {
 
   const handlePlacesChanged = () => {
     const places = searchBoxRef.current.state.searchBox.getPlaces();
-  
+
     if (places && places.length > 0) {
       const { formatted_address } = places[0];
       const location = places[0].geometry.location;
       const lat = location ? location.lat() : null;
       const lng = location ? location.lng() : null;
-  
+
       const newLocation = { lat, lng };
-  
+
       if (!sourceLocation) {
         setSourceLocation(newLocation);
       }
-  
+
       const address = sourceLocation ? source : formatted_address;
-  
-      onAddressChange(
-        address,
-        sourceLocation.lat,
-        sourceLocation.lng
-      );
+
+      onAddressChange(address, sourceLocation.lat, sourceLocation.lng);
     }
   };
-  
 
   const handleReset = () => {
     setSource(null);
     setSourceLocation(null);
     setHandleDrag(true);
-    onAddressChange(null, null, null,true);
+    onAddressChange(null, null, null, true);
   };
 
   // useEffect(() => {
@@ -157,16 +147,15 @@ const Reg_mapform = ({ style, onAddressChange }) => {
           />
         )} */}
 
-{sourceLocation && (
-  <Marker
-    position={{ lat: sourceLocation.lat, lng: sourceLocation.lng }}
-    draggable={handleDrag}
-    onDragEnd={(event) => handleMarkerDragEnd(event)}
-    animation={window.google.maps.Animation.DROP}
-    label={{ text: "SOURCE", color: "black" }}
-  />
-)}
-
+        {sourceLocation && (
+          <Marker
+            position={{ lat: sourceLocation.lat, lng: sourceLocation.lng }}
+            draggable={handleDrag}
+            onDragEnd={(event) => handleMarkerDragEnd(event)}
+            animation={window.google.maps.Animation.DROP}
+            label={{ text: "SOURCE", color: "black" }}
+          />
+        )}
 
         <StandaloneSearchBox
           ref={searchBoxRef}
@@ -193,7 +182,6 @@ const Reg_mapform = ({ style, onAddressChange }) => {
             }}
           />
         </StandaloneSearchBox>
-
 
         {sourceLocation && (
           <button

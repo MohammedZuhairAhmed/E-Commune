@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
 import {
   Avatar,
   Button,
@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Reg_mapform from "./Reg_mapform";
+import Modal from "react-modal";
 import axios from "../api/axios";
 
 function Org_Register() {
@@ -25,6 +26,51 @@ function Org_Register() {
   const [conPasswordErrorMsg, setConPasswordErrorMsg] = useState("");
   const [source, setSource] = useState(null);
   const [location, setLocation] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const login_link = "/organization/auth/login";
+
+  const PopupContent = ({ onClose }) => {
+    
+    return (
+      <div>
+        <p></p>
+        <Typography
+                    variant="body1"
+                    sx={{ right: 0, bottom: 0, textAlign: "middle" }}
+                  >
+                    Registration is successful. Please continue to the login page.
+                  </Typography>
+                  <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+        <Button variant="contained" onClick={onClose}>Log In</Button>
+      </div>
+      </div>
+    );
+  };
+
+  const openPopup = () => {
+    setIsOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsOpen(false);
+    navigate(`${login_link}`);
+  };
+
+  const customModalStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      transform: "translate(-50%, -50%)",
+      width: "300px",
+      padding: "20px",
+    },
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+  };
 
   const handleAddressChange = (source, lat, lng, reset = false) => {
     setSource(source);
@@ -107,6 +153,7 @@ function Org_Register() {
       );
 
       console.log(JSON.stringify(response.data));
+      openPopup();
     } catch (err) {
       if (!err?.response) {
         alert("No Server Response");
@@ -272,6 +319,14 @@ function Org_Register() {
             </Paper>
           </Grid>
         </form>
+        <Modal
+        isOpen={isOpen}
+        onRequestClose={closePopup}
+        contentLabel="Popup"
+        style={customModalStyles}
+      >
+        <PopupContent onClose={closePopup} />
+      </Modal>
       </div>
       <Reg_mapform
         onAddressChange={handleAddressChange}

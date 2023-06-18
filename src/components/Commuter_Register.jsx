@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
 import {
   Avatar,
   Button,
@@ -12,19 +12,10 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import axios from "../api/axios";
+import Modal from "react-modal";
 import SelectButton from "./SelectButton";
 import Reg_mapform from "./Reg_mapform";
 
-// const Container = styled(Box)`
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-//   align-items: center;
-//   height: 100vh;
-//   background-image: url("https://lh3.googleusercontent.com/FElZqDfXS54pvRWCaXIuKCl_0Z2SkrTX8_L1Sme9bR3qCvnuVXHDtBLyKV-MXxoCcpsg7FQekwQnk6szxhgdSzVlTTK9W0zqHwgUciWmmZl6RuRppa5nrPe6ffSprS3A3My2jdFL2v-lj1UFQrTzlq63hl74Tm-oCdeuAOOQ-A5QL2yhwt6sXkU9UVS5-ILMIffpDQeFkQ00UUBynqg_QJFEfc_Od19EnffEKHF-3wocUV197cxBg8LqS0G2o012iS8F5ItbVNC-fk0RmI3QBUbcmS2HVcV9mm4WuS5GnfyTVMD27ybCklJbRCmPn45LDLDveRm-vxDgCMnN3FlYYrMHeT2SMI-agF0ZkkMX7jBY3QmJc-5avrqjonH55eeY-Zuq_ZAaanRp_strY80gKNPtnFLE94mw-oAbMnJ4FgianE2fOSfN1MtZN3J-tLN-cgR6Y4LbARhOvB8hbjkezzuYzdC3AYmg15vBHkW3git4IIrYr_SNz2f2POS34VV0C0tKZRW87hqWeoxdDQSoFFf_078tfrRda7eYYutjg0e1Yhvsaie8i556LNU7IVSK3sauNEYQsz6RXUVfHk5qK6UBdRMRoZZLerWpoh2YepvJ8J434zulNrYxYVKg0f9zD6Mk-88De61spX2eYGjHkSL1jcval5ZA6qZCItt3k7HeW_8Jfz40mUddEfkfvMCh-VtTcmRG3eNETdC05KN7mFzFM12qwP1OQM6B5D8kzltNFvIRDpuHkkpgU6GZTEO2SnxyXpCJyUOydz0rcZ2B2zFCMNuQMiMZvIcUhwvX-BANf3fcnArf8JJUIgd5MnLmYoP-yBSb08Q_rnr3ycSZZM_rqFz-HIlXKktezhfk8pucoYN11Y7ckpVlyeH1sM3frLJrZaq6Erv6HaqMERxP0XMsIP-DVTbpWO24oH3uJYTq3hPHZTAXcMHph3PUhtbNZuN9x-xJ50mLDvwSln0j-NDYDD-AX3IxXGRHqifd2N0mD2f3WRZ3iw=w720-h360-s-no?authuser=0");
-//   background-size: cover;
-//   background-color: #f2f2f2;
-// `;
 function Commuter_Register() {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
@@ -41,6 +32,51 @@ function Commuter_Register() {
   const [location, setLocation] = useState(null);
   const [checked, setChecked] = useState(false);
   const [orgID, setOrgID] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const login_link = "/commuter/auth/login";
+
+  const PopupContent = ({ onClose }) => {
+    
+    return (
+      <div>
+        <p></p>
+        <Typography
+                    variant="body1"
+                    sx={{ right: 0, bottom: 0, textAlign: "middle" }}
+                  >
+                    Registration is successful. Please continue to the login page.
+                  </Typography>
+                  <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+        <Button variant="contained" onClick={onClose}>Log In</Button>
+      </div>
+      </div>
+    );
+  };
+
+  const openPopup = () => {
+    setIsOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsOpen(false);
+    navigate(`${login_link}`);
+  };
+
+  const customModalStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      transform: "translate(-50%, -50%)",
+      width: "300px",
+      padding: "20px",
+    },
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+  };
 
   const handleAddressChange = (source, lat, lng, reset = false) => {
     setSource(source);
@@ -131,6 +167,7 @@ function Commuter_Register() {
       );
 
       console.log(JSON.stringify(response.data));
+      openPopup();
     } catch (err) {
       if (!err?.response) {
         alert("No Server Response");
@@ -332,6 +369,14 @@ function Commuter_Register() {
             </Paper>
           </Grid>
         </form>
+        <Modal
+        isOpen={isOpen}
+        onRequestClose={closePopup}
+        contentLabel="Popup"
+        style={customModalStyles}
+      >
+        <PopupContent onClose={closePopup} />
+      </Modal>
       </div>
       <Reg_mapform
         onAddressChange={handleAddressChange}

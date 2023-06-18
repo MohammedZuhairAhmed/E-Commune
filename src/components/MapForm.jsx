@@ -5,38 +5,7 @@ import {
   StandaloneSearchBox,
   DirectionsRenderer,
 } from "@react-google-maps/api";
-
-// Example usage
-const pickupPoints = [
-  { lat: 13.332625, lng: 77.125979 },
-  { lat: 13.329661, lng: 77.116881 },
-  { lat: 13.331665, lng: 77.113694 },
-];
-
-// Define the waypoints array
-const waypoints = pickupPoints.map((pickupPoint) => ({
-  location: new window.google.maps.LatLng(pickupPoint.lat, pickupPoint.lng),
-  stopover: true,
-}));
-
-// const getCurrentLocation = () => {
-//   return new Promise((resolve, reject) => {
-//     if (navigator.geolocation) {
-//       navigator.geolocation.getCurrentPosition(
-//         (position) => {
-//           const { latitude, longitude } = position.coords;
-//           const currentLocation = { lat: latitude, lng: longitude };
-//           resolve(currentLocation);
-//         },
-//         (error) => {
-//           reject(error);
-//         }
-//       );
-//     } else {
-//       reject(new Error("Geolocation is not supported by this browser."));
-//     }
-//   });
-// };
+import axios from "../api/axios";
 
 const MapForm = ({ style, onAddressChange }) => {
   const mapRef = useRef(null);
@@ -45,7 +14,40 @@ const MapForm = ({ style, onAddressChange }) => {
   const searchBoxRef = useRef(null);
   const [directionsResult, setDirectionsResult] = useState(null);
   const [handleDrag, setHandleDrag] = useState(true);
-  // const [currentLocation, setCurrentLocation] = useState(null);
+  const [pickupPoints,setPickupPoints] = useState(null);
+
+  useEffect(() => {
+    async function fetchPickup() {
+      try {
+        const response = await axios.get("/organization");
+        const orgs = response.data;
+  
+        // Extract latitudes and longitudes
+        const pickup = [];
+        orgs.forEach((org) => {
+          const employeesWithProgram = org.employee_ids.filter(
+            (employee) => employee.opted_for_program === true
+          );
+          employeesWithProgram.forEach((employee) => {
+            const { lat, lng } = employee;
+            pickup.push({ lat, lng });
+          });
+        });
+  
+        setPickupPoints(pickup);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  
+    fetchPickup();
+  }, []);
+
+  const waypoints = pickupPoints.map((pickupPoint) => ({
+    location: new window.google.maps.LatLng(pickupPoint.lat, pickupPoint.lng),
+    stopover: true,
+  }));
+  
 
   const handleButtonClick = async () => {
     if (fromLocation && toLocation) {
@@ -164,19 +166,6 @@ const MapForm = ({ style, onAddressChange }) => {
     onAddressChange(null, null, null, null, null, null, true);
   };
 
-  // useEffect(() => {
-  //   const fetchCurrentLocation = async () => {
-  //     try {
-  //       const currentLocation = await getCurrentLocation();
-  //       setCurrentLocation(currentLocation);
-  //     } catch (error) {
-  //       console.error("Error fetching current location:", error);
-  //     }
-  //   };
-
-  //   fetchCurrentLocation();
-  // }, []);
-
   return (
     <div style={style}>
       <GoogleMap
@@ -186,15 +175,7 @@ const MapForm = ({ style, onAddressChange }) => {
         center={toLocation || fromLocation || { lat: 13.3379, lng: 77.1173 }}
         onClick={handleMapClick}
       >
-        {/* {currentLocation && (
-          <Marker
-            position={currentLocation}
-            icon={{
-              url: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png",
-              scaledSize: new window.google.maps.Size(32, 32),
-            }}
-          />
-        )} */}
+
         {pickupPoints.map((pickupPoint, index) => (
           <Marker
             key={index}

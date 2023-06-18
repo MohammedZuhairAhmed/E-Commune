@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link , useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Avatar,
   Button,
@@ -31,19 +31,26 @@ function Org_Register() {
   const login_link = "/organization/auth/login";
 
   const PopupContent = ({ onClose }) => {
-    
     return (
       <div>
         <p></p>
         <Typography
-                    variant="body1"
-                    sx={{ right: 0, bottom: 0, textAlign: "middle" }}
-                  >
-                    Registration is successful. Please continue to the login page.
-                  </Typography>
-                  <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-        <Button variant="contained" onClick={onClose}>Log In</Button>
-      </div>
+          variant="body1"
+          sx={{ right: 0, bottom: 0, textAlign: "middle" }}
+        >
+          Registration is successful. Please continue to the login page.
+        </Typography>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "20px",
+          }}
+        >
+          <Button variant="contained" onClick={onClose}>
+            Log In
+          </Button>
+        </div>
       </div>
     );
   };
@@ -320,13 +327,13 @@ function Org_Register() {
           </Grid>
         </form>
         <Modal
-        isOpen={isOpen}
-        onRequestClose={closePopup}
-        contentLabel="Popup"
-        style={customModalStyles}
-      >
-        <PopupContent onClose={closePopup} />
-      </Modal>
+          isOpen={isOpen}
+          onRequestClose={closePopup}
+          contentLabel="Popup"
+          style={customModalStyles}
+        >
+          <PopupContent onClose={closePopup} />
+        </Modal>
       </div>
       <Reg_mapform
         onAddressChange={handleAddressChange}

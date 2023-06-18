@@ -1,24 +1,30 @@
 import { useRef, useState, useEffect } from "react";
-import { GoogleMap, Marker, StandaloneSearchBox } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  Marker,
+  StandaloneSearchBox,
+  InfoWindow,
+} from "@react-google-maps/api";
+import { Typography } from "@mui/material";
 
-// const getCurrentLocation = () => {
-//   return new Promise((resolve, reject) => {
-//     if (navigator.geolocation) {
-//       navigator.geolocation.getCurrentPosition(
-//         (position) => {
-//           const { latitude, longitude } = position.coords;
-//           const currentLocation = { lat: latitude, lng: longitude };
-//           resolve(currentLocation);
-//         },
-//         (error) => {
-//           reject(error);
-//         }
-//       );
-//     } else {
-//       reject(new Error("Geolocation is not supported by this browser."));
-//     }
-//   });
-// };
+const getCurrentLocation = () => {
+  return new Promise((resolve, reject) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const currentLocation = { lat: latitude, lng: longitude };
+          resolve(currentLocation);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    } else {
+      reject(new Error("Geolocation is not supported by this browser."));
+    }
+  });
+};
 
 const Reg_mapform = ({ style, onAddressChange }) => {
   const mapRef = useRef(null);
@@ -26,6 +32,8 @@ const Reg_mapform = ({ style, onAddressChange }) => {
   const [sourceLocation, setSourceLocation] = useState(null);
   const searchBoxRef = useRef(null);
   const [handleDrag, setHandleDrag] = useState(true);
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [showInfoWindow, setShowInfoWindow] = useState(false);
 
   const handleButtonClick = async () => {
     if (sourceLocation) {
@@ -65,28 +73,6 @@ const Reg_mapform = ({ style, onAddressChange }) => {
     setSourceLocation({ lat, lng });
   };
 
-  // const handlePlacesChanged = () => {
-  //   const places = searchBoxRef.current.state.searchBox.getPlaces();
-
-  //   if (places && places.length > 0) {
-  //     const { formatted_address } = places[0];
-  //    // const source = !fromLocation ? formatted_address : from;
-  //     const location = places[0].geometry.location;
-  //     const lat = location ? location.lat() : null;
-  //     const lng = location ? location.lng() : null;
-
-  //     setSource(source)
-  //     setLat(lat);
-  //     setLng(lng);
-
-  //     onAddressChange(
-  //       source,
-  //       lat,
-  //       lng
-  //     );
-  //   }
-  // };
-
   const handlePlacesChanged = () => {
     const places = searchBoxRef.current.state.searchBox.getPlaces();
 
@@ -115,18 +101,18 @@ const Reg_mapform = ({ style, onAddressChange }) => {
     onAddressChange(null, null, null, true);
   };
 
-  // useEffect(() => {
-  //   const fetchCurrentLocation = async () => {
-  //     try {
-  //       const currentLocation = await getCurrentLocation();
-  //       setCurrentLocation(currentLocation);
-  //     } catch (error) {
-  //       console.error("Error fetching current location:", error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchCurrentLocation = async () => {
+      try {
+        const currentLocation = await getCurrentLocation();
+        setCurrentLocation(currentLocation);
+      } catch (error) {
+        console.error("Error fetching current location:", error);
+      }
+    };
 
-  //   fetchCurrentLocation();
-  // }, []);
+    fetchCurrentLocation();
+  }, []);
 
   return (
     <div style={style}>
@@ -134,18 +120,31 @@ const Reg_mapform = ({ style, onAddressChange }) => {
         ref={mapRef}
         mapContainerStyle={{ height: "100%", width: "100%" }}
         zoom={15}
-        center={{ lat: 13.3379, lng: 77.1173 }}
+        center={currentLocation || { lat: 13.3379, lng: 77.1173 }}
         onClick={handleMapClick}
       >
-        {/* {currentLocation && (
+        {currentLocation && (
           <Marker
             position={currentLocation}
             icon={{
-              url: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png",
+              url: "https://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png",
               scaledSize: new window.google.maps.Size(32, 32),
             }}
-          />
-        )} */}
+            onMouseOver={() => setShowInfoWindow(true)}
+            onMouseOut={() => setShowInfoWindow(false)}
+          >
+            {showInfoWindow && (
+              <InfoWindow onCloseClick={() => setShowInfoWindow(false)}>
+                <Typography
+                  variant="body1"
+                  sx={{ right: 0, bottom: 0, textAlign: "middle" }}
+                >
+                  Your Current Location
+                </Typography>
+              </InfoWindow>
+            )}
+          </Marker>
+        )}
 
         {sourceLocation && (
           <Marker

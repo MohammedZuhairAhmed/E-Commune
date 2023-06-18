@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link , useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Avatar,
   Button,
@@ -33,26 +33,72 @@ function Commuter_Register() {
   const [checked, setChecked] = useState(false);
   const [orgID, setOrgID] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpen1, setIsOpen1] = useState(null);
   const navigate = useNavigate();
   const login_link = "/commuter/auth/login";
 
   const PopupContent = ({ onClose }) => {
-    
     return (
       <div>
         <p></p>
         <Typography
-                    variant="body1"
-                    sx={{ right: 0, bottom: 0, textAlign: "middle" }}
-                  >
-                    Registration is successful. Please continue to the login page.
-                  </Typography>
-                  <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-        <Button variant="contained" onClick={onClose}>Log In</Button>
-      </div>
+          variant="body1"
+          sx={{ right: 0, bottom: 0, textAlign: "middle" }}
+        >
+          Registration is successful. Please continue to the login page.
+        </Typography>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "20px",
+          }}
+        >
+          <Button variant="contained" onClick={onClose}>
+            Log In
+          </Button>
+        </div>
       </div>
     );
   };
+
+  const PopupContent1 = ({ onClose }) => {
+    return (
+      <div>
+        <p></p>
+        <Typography
+          variant="body1"
+          sx={{ right: 0, bottom: 0, textAlign: "middle" }}
+        >
+          please provide your pickup points to your nearest main roads
+        </Typography>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "20px",
+          }}
+        >
+          <Button variant="contained" onClick={onClose}>
+            Close
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  const openPopup1 = () => {
+    setIsOpen1(true);
+  };
+
+  const closePopup1 = () => {
+    setIsOpen1(false);
+  };
+
+  useEffect(() => {
+    // Show pickup points popup when the component mounts
+    openPopup1();
+  }, []);
 
   const openPopup = () => {
     setIsOpen(true);
@@ -143,7 +189,7 @@ function Commuter_Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent default form submission behavior
-    console.log(orgID);
+
     try {
       const response = await axios.post(
         "/commuter/auth/register",
@@ -370,13 +416,22 @@ function Commuter_Register() {
           </Grid>
         </form>
         <Modal
-        isOpen={isOpen}
-        onRequestClose={closePopup}
-        contentLabel="Popup"
-        style={customModalStyles}
-      >
-        <PopupContent onClose={closePopup} />
-      </Modal>
+          isOpen={isOpen1}
+          onRequestClose={closePopup1}
+          contentLabel="Popup"
+          style={customModalStyles}
+        >
+          <PopupContent1 onClose={closePopup1} />
+        </Modal>
+
+        <Modal
+          isOpen={isOpen}
+          onRequestClose={closePopup}
+          contentLabel="Popup"
+          style={customModalStyles}
+        >
+          <PopupContent onClose={closePopup} />
+        </Modal>
       </div>
       <Reg_mapform
         onAddressChange={handleAddressChange}

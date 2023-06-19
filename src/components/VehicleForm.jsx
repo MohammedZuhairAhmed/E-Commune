@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Avatar,
   Button,
@@ -34,7 +34,9 @@ function VehicleForm() {
   const departTimeRef = useRef(null);
   const { id } = useParams();
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpen1, setIsOpen1] = useState(null);
   const [val, setVal] = useState(null);
+  const navigate = useNavigate();
 
   const PopupContent = ({ onClose }) => {
     const handleYesClick = () => {
@@ -75,6 +77,55 @@ function VehicleForm() {
         </div>
       </div>
     );
+  };
+
+  const PopupContent1 = ({ onClose }) => {
+    const handleYesClick = () => {
+      onClose();
+    };
+
+    const handleNoClick = () => {
+      navigate(`/organization/${id}`);
+      onClose();
+    };
+    return (
+      <div>
+        <p></p>
+        <Typography
+          variant="body1"
+          sx={{ right: 0, bottom: 0, textAlign: "middle" }}
+        >
+          Commute details registration is successful. Do you want to add another
+          commute details?
+        </Typography>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "20px",
+          }}
+        >
+          <Button
+            variant="contained"
+            onClick={handleYesClick}
+            style={{ marginRight: "10px" }}
+          >
+            Yes
+          </Button>
+          <Button variant="contained" onClick={handleNoClick}>
+            No
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  const openPopup1 = () => {
+    setIsOpen1(true);
+  };
+
+  const closePopup1 = () => {
+    setIsOpen1(false);
   };
 
   const handleAddressChange = (
@@ -171,6 +222,7 @@ function VehicleForm() {
           }
         );
         console.log(JSON.stringify(response.data));
+        openPopup1();
       } catch (err) {
         if (!err?.response) {
           alert("No Server Response");
@@ -364,6 +416,14 @@ function VehicleForm() {
           style={customModalStyles}
         >
           <PopupContent onClose={closePopup} />
+        </Modal>
+        <Modal
+          isOpen={isOpen1}
+          onRequestClose={closePopup1}
+          contentLabel="Popup"
+          style={customModalStyles}
+        >
+          <PopupContent1 onClose={closePopup1} />
         </Modal>
       </div>
       {val !== null && (

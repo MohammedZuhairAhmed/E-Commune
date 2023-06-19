@@ -33,7 +33,6 @@ function Org_Register() {
   const PopupContent = ({ onClose }) => {
     return (
       <div>
-        <p></p>
         <Typography
           variant="body1"
           sx={{ right: 0, bottom: 0, textAlign: "middle" }}

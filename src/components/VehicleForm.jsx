@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Avatar,
@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import DirectionsTransitFilledTwoToneIcon from "@mui/icons-material/DirectionsTransitFilledTwoTone";
 import axios from "../api/axios";
+import Modal from "react-modal";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -32,6 +33,49 @@ function VehicleForm() {
   const arrivalTimeRef = useRef(null);
   const departTimeRef = useRef(null);
   const { id } = useParams();
+  const [isOpen, setIsOpen] = useState(false);
+  const [val, setVal] = useState(null);
+
+  const PopupContent = ({ onClose }) => {
+    const handleYesClick = () => {
+      setVal(true);
+      onClose();
+    };
+
+    const handleNoClick = () => {
+      setVal(false);
+      onClose();
+    };
+
+    return (
+      <div>
+        <Typography
+          variant="body1"
+          sx={{ right: 0, bottom: 0, textAlign: "middle" }}
+        >
+          Do you want to use your address as your destination address
+        </Typography>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "20px",
+          }}
+        >
+          <Button
+            variant="contained"
+            onClick={handleYesClick}
+            style={{ marginRight: "10px" }}
+          >
+            Yes
+          </Button>
+          <Button variant="contained" onClick={handleNoClick}>
+            No
+          </Button>
+        </div>
+      </div>
+    );
+  };
 
   const handleAddressChange = (
     from,
@@ -51,6 +95,33 @@ function VehicleForm() {
       setFrom("");
       setTo("");
     }
+  };
+
+  const openPopup = () => {
+    setIsOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsOpen(false);
+  };
+  useEffect(() => {
+    // Show pickup points popup when the component mounts
+    openPopup();
+  }, []);
+
+  const customModalStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      transform: "translate(-50%, -50%)",
+      width: "300px",
+      padding: "20px",
+    },
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
   };
 
   const handleSubmit = async (e) => {
@@ -286,11 +357,22 @@ function VehicleForm() {
             </Paper>
           </Grid>
         </form>
+        <Modal
+          isOpen={isOpen}
+          onRequestClose={closePopup}
+          contentLabel="Popup"
+          style={customModalStyles}
+        >
+          <PopupContent onClose={closePopup} />
+        </Modal>
       </div>
-      <MapForm
-        onAddressChange={handleAddressChange}
-        style={{ flex: "1", height: "125vh", width: "50%", float: "right" }}
-      />
+      {val !== null && (
+        <MapForm
+          onAddressChange={handleAddressChange}
+          style={{ flex: "1", height: "125vh", width: "50%", float: "right" }}
+          val={val}
+        />
+      )}
     </div>
   );
 }

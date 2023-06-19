@@ -6,6 +6,7 @@ import {
   DirectionsRenderer,
 } from "@react-google-maps/api";
 import axios from "../api/axios";
+import { useParams } from "react-router-dom";
 
 const MapForm = ({ style, onAddressChange, val }) => {
   const mapRef = useRef(null);
@@ -16,6 +17,7 @@ const MapForm = ({ style, onAddressChange, val }) => {
   const [handleDrag, setHandleDrag] = useState(true);
   const [pickupPoints, setPickupPoints] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const { id } = useParams();
 
   useEffect(() => {
     async function fetchPickup() {
@@ -23,22 +25,31 @@ const MapForm = ({ style, onAddressChange, val }) => {
         const response = await axios.get("/organization");
         const orgs = response.data;
 
+        // Find the organization with the specified ID
+        const org = orgs.find((org) => org._id === id);
+
+        if (!org) {
+          console.error(`Organization with ID ${id} not found`);
+          return;
+        }
+
         // Extract latitudes and longitudes
         const pickup = [];
-        orgs.forEach((org) => {
-          if (val) setToLocation({ lat: org.lat, lng: org.lng });
-          const employeesWithProgram = org.employee_ids.filter(
-            (employee) => employee.opted_for_program === true
-          );
-          employeesWithProgram.forEach((employee) => {
-            const { lat, lng } = employee;
-            const object = {
-              location: new window.google.maps.LatLng(lat, lng),
-              stopover: true,
-            };
-            pickup.push(object);
-          });
+        if (val) {
+          setToLocation({ lat: org.lat, lng: org.lng });
+        }
+        const employeesWithProgram = org.employee_ids.filter(
+          (employee) => employee.opted_for_program === true
+        );
+        employeesWithProgram.forEach((employee) => {
+          const { lat, lng } = employee;
+          const object = {
+            location: new window.google.maps.LatLng(lat, lng),
+            stopover: true,
+          };
+          pickup.push(object);
         });
+
         setPickupPoints(pickup);
         setLoaded(true);
       } catch (error) {

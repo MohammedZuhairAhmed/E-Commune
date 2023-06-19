@@ -1,81 +1,158 @@
+import axios from "../api/axios";
+import { useState, useEffect } from "react";
 import {
   Table,
   TableHead,
+  TableBody,
   TableRow,
   TableCell,
-  TableBody,
+  Paper,
+  Typography,
+  Button,
+  Box,
 } from "@mui/material";
+import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const VehicleList = () => {
-  const data = [
-    {
-      _id: "6455b72502ba9755699ec168",
-      name: "demo",
-      type: "Bicycle",
-      from: "2012/16, K E B Main Rd, Koothi Thope, Shrirama Nagar, Tumakuru, Karnataka 572101, India",
-      fromLat: 13.341219719643403,
-      fromLong: 77.11158153038026,
-      to: "943C+RQ7, Shanti Nagar, Tumakuru, Karnataka 572106, India",
-      toLat: 13.353809185192015,
-      toLong: 77.12238546829225,
-      number: "adwdw626",
-      __v: 0,
-    },
-    {
-      _id: "6455b72502ba9755699ec169",
-      name: "demo2",
-      type: "Car",
-      from: "2012/16, K E B Main Rd, Koothi Thope, Shrirama Nagar, Tumakuru, Karnataka 572101, India",
-      fromLat: 13.341219719643403,
-      fromLong: 77.11158153038026,
-      to: "943C+RQ7, Shanti Nagar, Tumakuru, Karnataka 572106, India",
-      toLat: 13.353809185192015,
-      toLong: 77.12238546829225,
-      number: "adwdw627",
-      __v: 0,
-    },
-    {
-      _id: "6455b72502ba9755699ec170",
-      name: "demo3",
-      type: "Bike",
-      from: "2012/16, K E B Main Rd, Koothi Thope, Shrirama Nagar, Tumakuru, Karnataka 572101, India",
-      fromLat: 13.341219719643403,
-      fromLong: 77.11158153038026,
-      to: "943C+RQ7, Shanti Nagar, Tumakuru, Karnataka 572106, India",
-      toLat: 13.353809185192015,
-      toLong: 77.12238546829225,
-      number: "adwdw628",
-      __v: 0,
-    },
-  ];
+  const [selectedVehicles, setSelectedVehicles] = useState([]);
+  const { id } = useParams();
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        // Fetch commuter details to get orgID
+        const commuterResponse = await axios.get(`/commuter/auth/id/${id}`);
+        const { orgID } = commuterResponse.data;
+
+        // Fetch organization details by orgID
+        const organizationResponse = await axios.get(
+          `/organization/auth/id/${orgID}`
+        );
+        const organization = organizationResponse.data;
+
+        // Extract the selected vehicle details
+        const vehicles = organization.selected_vehicle_ids;
+
+        // Store the selected vehicle details in state variable
+        setSelectedVehicles(vehicles);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchData();
+  }, [id]);
 
   return (
-    <div style={{ marginBottom: "15rem" }}>
-      <h1>VehicleList</h1>
-      <Table>
-        <TableHead sx={{ color: "red", backgroundColor: "#d62828" }}>
-          <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Type</TableCell>
-            <TableCell>From</TableCell>
-            <TableCell>To</TableCell>
-            <TableCell>Number</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody sx={{ backgroundColor: "lightgray" }}>
-          {data.map((vehicle) => (
-            <TableRow key={vehicle._id}>
-              <TableCell>{vehicle._id}</TableCell>
-              <TableCell>{vehicle.name}</TableCell>
-              <TableCell>{vehicle.type}</TableCell>
-              <TableCell>{vehicle.from}</TableCell>
-              <TableCell>{vehicle.to}</TableCell>
-              <TableCell>{vehicle.number}</TableCell>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <Paper elevation={3} style={{ width: "95%", padding: "16px" }}>
+        <Table>
+          <TableHead>
+            <TableRow style={{ backgroundColor: "#f8f8f8" }}>
+              <TableCell>
+                <Typography variant="h6">Name</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">Type</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">From</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">To</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">Number</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">Arrival Time</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">Departure Time</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">No. of Seats</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">Map View</Typography>
+              </TableCell>
+              <TableCell></TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {selectedVehicles.map((vehicle, index) => (
+              <TableRow
+                key={index}
+                style={{ backgroundColor: index % 2 ? "#f8f8f8" : "white" }}
+              >
+                <TableCell>
+                  <Typography>{vehicle.name}</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>{vehicle.type}</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>{vehicle.from}</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>{vehicle.to}</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>{vehicle.number}</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>{vehicle.arrivalTime}</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>{vehicle.departureTime}</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>{vehicle.seats}</Typography>
+                </TableCell>
+                <TableCell>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Link to={"/"}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        style={{ fontWeight: "bold" }}
+                      >
+                        Map View
+                      </Button>
+                    </Link>
+                  </Box>
+                </TableCell>
+                <TableCell>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      style={{ fontWeight: "bold" }}
+                    >
+                      Select
+                    </Button>
+                  </Box>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Paper>
     </div>
   );
 };

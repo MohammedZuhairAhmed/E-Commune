@@ -16,6 +16,8 @@ import { Link } from "react-router-dom";
 
 const VehicleList = () => {
   const [selectedVehicles, setSelectedVehicles] = useState([]);
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
   const { id } = useParams();
 
   useEffect(() => {
@@ -24,7 +26,8 @@ const VehicleList = () => {
         // Fetch commuter details to get orgID
         const commuterResponse = await axios.get(`/commuter/auth/id/${id}`);
         const { orgID } = commuterResponse.data;
-
+        setLat(commuterResponse.data.lat);
+        setLng(commuterResponse.data.lng);
         // Fetch organization details by orgID
         const organizationResponse = await axios.get(
           `/organization/auth/id/${orgID}`
@@ -122,7 +125,7 @@ const VehicleList = () => {
                     alignItems="center"
                     justifyContent="center"
                   >
-                    <Link to={"/"}>
+                    <Link to={`/vehicle/${vehicle._id}?lat=${lat}&lng=${lng}`}>
                       <Button
                         variant="contained"
                         color="primary"

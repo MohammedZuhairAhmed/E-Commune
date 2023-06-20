@@ -111,6 +111,7 @@ function VehicleForm() {
   const PopupContent1 = ({ onClose }) => {
     const handleYesClick = () => {
       onClose();
+      window.location.reload();
     };
 
     const handleNoClick = () => {

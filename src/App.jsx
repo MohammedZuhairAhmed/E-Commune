@@ -14,6 +14,8 @@ import VehicleForm from "./components/VehicleForm";
 import VehicleList from "./components/VehicleList";
 import About from "./components/About";
 import Contact from "./components/Contact";
+import MapView from "./components/MapView";
+
 function App() {
   return (
     <Routes>
@@ -31,6 +33,7 @@ function App() {
         <Route path="/organization/:id/vehicleForm" element={<VehicleForm />} />
         <Route path="/commuter/:id/vehicleList" element={<VehicleList />} />
         <Route path="/commuter" element={<Commuter />} />
+        <Route path="/vehicle/:id" element={<MapView />} />
       </Route>
     </Routes>
   );

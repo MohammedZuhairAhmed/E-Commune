@@ -37,6 +37,35 @@ function VehicleForm() {
   const [isOpen1, setIsOpen1] = useState(null);
   const [val, setVal] = useState(null);
   const navigate = useNavigate();
+  const [pickupPoints, setPickupPoints] = useState(null);
+
+  useEffect(() => {
+    async function fetchPickup() {
+      try {
+        const response = await axios.get(`/organization/auth/id/${id}`);
+        const org = response.data;
+        const pickup = [];
+
+        const employeesWithProgram = org.employee_ids.filter(
+          (employee) => employee.opted_for_program === true
+        );
+        employeesWithProgram.forEach((employee) => {
+          const { lat, lng } = employee;
+          const object = {
+            location: new window.google.maps.LatLng(lat, lng),
+            stopover: true,
+          };
+          pickup.push(object);
+        });
+
+        setPickupPoints(pickup);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchPickup();
+  }, []);
 
   const PopupContent = ({ onClose }) => {
     const handleYesClick = () => {
@@ -197,7 +226,9 @@ function VehicleForm() {
       toLocation &&
       number &&
       arrival &&
-      depart
+      depart &&
+      seats &&
+      pickupPoints
     ) {
       try {
         const response = await axios.post(
@@ -215,6 +246,8 @@ function VehicleForm() {
             orgId: id,
             arrivalTime: arrival,
             departureTime: depart,
+            seats,
+            pickupPoints,
           }),
           {
             headers: { "Content-Type": "application/json" },
@@ -290,8 +323,6 @@ function VehicleForm() {
                     <MenuItem value="" disabled>
                       Select Vehicle Type
                     </MenuItem>
-                    <MenuItem value={"Bicycle"}>Bicycle</MenuItem>
-                    <MenuItem value={"Bike"}>Bike</MenuItem>
                     <MenuItem value={"Car"}>Car</MenuItem>
                     <MenuItem value={"Bus"}>Bus</MenuItem>
                   </Select>

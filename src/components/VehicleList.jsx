@@ -41,7 +41,7 @@ const VehicleList = () => {
       }
     }
     fetchData();
-  }, [id]);
+  }, []);
 
   return (
     <div

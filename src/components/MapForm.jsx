@@ -22,16 +22,8 @@ const MapForm = ({ style, onAddressChange, val }) => {
   useEffect(() => {
     async function fetchPickup() {
       try {
-        const response = await axios.get("/organization");
-        const orgs = response.data;
-
-        // Find the organization with the specified ID
-        const org = orgs.find((org) => org._id === id);
-
-        if (!org) {
-          console.error(`Organization with ID ${id} not found`);
-          return;
-        }
+        const response = await axios.get(`/organization/auth/id/${id}`);
+        const org = response.data;
 
         // Extract latitudes and longitudes
         const pickup = [];

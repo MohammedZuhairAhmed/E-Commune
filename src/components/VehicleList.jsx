@@ -142,13 +142,15 @@ const VehicleList = () => {
                     alignItems="center"
                     justifyContent="center"
                   >
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      style={{ fontWeight: "bold" }}
-                    >
-                      Select
-                    </Button>
+                    <Link to={`/seats/${id}/${vehicle._id}`}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        style={{ fontWeight: "bold" }}
+                      >
+                        Select
+                      </Button>
+                    </Link>
                   </Box>
                 </TableCell>
               </TableRow>

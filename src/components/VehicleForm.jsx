@@ -22,7 +22,7 @@ import MapForm from "./MapForm";
 function VehicleForm() {
   const [name, setName] = useState(null);
   const [type, setType] = useState("");
-  const [seats, setSeats] = useState(null);
+  const [noOfSeats, setNoOfSeats] = useState(0);
   const [from, setFrom] = useState(null);
   const [to, setTo] = useState(null);
   const [fromLocation, setFromLocation] = useState({ lat: null, lng: null });
@@ -207,7 +207,7 @@ function VehicleForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent default form submission behavior
-
+    let arr = Array(parseInt(noOfSeats, 10)).fill(0);
     setArrival(
       new Date(
         arrivalTimeRef.current.querySelector("input").value
@@ -220,7 +220,7 @@ function VehicleForm() {
     if (
       name &&
       type &&
-      seats &&
+      noOfSeats &&
       from &&
       to &&
       fromLocation &&
@@ -228,7 +228,6 @@ function VehicleForm() {
       number &&
       arrival &&
       depart &&
-      seats &&
       pickupPoints
     ) {
       try {
@@ -247,7 +246,8 @@ function VehicleForm() {
             orgId: id,
             arrivalTime: arrival,
             departureTime: depart,
-            seats,
+            no_of_seats: noOfSeats,
+            seats: arr,
             pickupPoints,
           }),
           {
@@ -348,8 +348,8 @@ function VehicleForm() {
                     type="number"
                     required
                     variant="standard"
-                    onChange={(e) => setSeats(e.target.value)}
-                    value={seats}
+                    onChange={(e) => setNoOfSeats(e.target.value)}
+                    value={noOfSeats}
                   />
                 </Grid>
 
@@ -425,7 +425,7 @@ function VehicleForm() {
                   !name ||
                   !type ||
                   !number ||
-                  !seats ||
+                  !noOfSeats ||
                   !from ||
                   !to ||
                   !fromLocation ||

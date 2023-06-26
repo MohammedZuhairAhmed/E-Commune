@@ -117,7 +117,7 @@ const VehicleList = () => {
                   <Typography>{vehicle.departureTime}</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography>{vehicle.seats}</Typography>
+                  <Typography>{vehicle.no_of_seats}</Typography>
                 </TableCell>
                 <TableCell>
                   <Box

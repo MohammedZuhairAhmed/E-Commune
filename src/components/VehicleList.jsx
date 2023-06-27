@@ -11,23 +11,95 @@ import {
   Button,
   Box,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
+import Modal from "react-modal";
 
 const VehicleList = () => {
   const [selectedVehicles, setSelectedVehicles] = useState([]);
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
   const { id } = useParams();
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const PopupContent = ({ onClose }) => {
+    return (
+      <div>
+        <Typography
+          variant="body1"
+          sx={{ right: 0, bottom: 0, textAlign: "middle" }}
+        >
+          You have successfully registered for this commute program.
+        </Typography>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "20px",
+          }}
+        >
+          <Button variant="contained" onClick={onClose}>
+            close
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  const openPopup = () => {
+    setIsOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsOpen(false);
+    navigate(`/commuter/${id}`);
+  };
+
+  const customModalStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      transform: "translate(-50%, -50%)",
+      width: "300px",
+      padding: "20px",
+    },
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+  };
+
+  const handleCarRegister = async (vehicleId, arr) => {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] === 0) {
+        arr[i] = 1; // Change the first occurrence of 0 to 1
+        break; // Exit the loop after modifying the seat
+      }
+    }
+
+    try {
+      await axios.patch("/vehicle/auth/select", {
+        cid: id,
+        vid: vehicleId,
+        seats: arr,
+      });
+      console.log("Vehicle added to commuter successfully");
+      openPopup();
+    } catch (error) {
+      console.error("Error adding vehicle to commuter:", error);
+    }
+  };
 
   useEffect(() => {
     async function fetchData() {
       try {
         // Fetch commuter details to get orgID
         const commuterResponse = await axios.get(`/commuter/auth/id/${id}`);
-        const { orgID } = commuterResponse.data;
+        const { orgID, selected_vehicle_ids } = commuterResponse.data;
         setLat(commuterResponse.data.lat);
         setLng(commuterResponse.data.lng);
+
         // Fetch organization details by orgID
         const organizationResponse = await axios.get(
           `/organization/auth/id/${orgID}`
@@ -37,8 +109,29 @@ const VehicleList = () => {
         // Extract the selected vehicle details
         const vehicles = organization.selected_vehicle_ids;
 
-        // Store the selected vehicle details in state variable
-        setSelectedVehicles(vehicles);
+        let filteredVehicles;
+
+        // Filter the vehicles based on the selected_vehicle_ids array
+        if (selected_vehicle_ids.length === 0) {
+          // If selected_vehicle_ids is empty, set selectedVehicles to the entire vehicles array
+          filteredVehicles = vehicles;
+        } else {
+          // Remove the vehicles with matching _id from the vehicles array
+          filteredVehicles = vehicles.filter((vehicle) => {
+            // Check if the vehicle _id is not present in the selected_vehicle_ids array
+            return !selected_vehicle_ids.some(
+              (selectedId) => selectedId._id === vehicle._id
+            );
+          });
+        }
+
+        // Remove vehicles with available_seats = 0 from filteredVehicles
+        filteredVehicles = filteredVehicles.filter(
+          (vehicle) => vehicle.available_seats > 0
+        );
+
+        // Store the filtered vehicle details in state variable
+        setSelectedVehicles(filteredVehicles);
       } catch (error) {
         console.error(error);
       }
@@ -81,7 +174,7 @@ const VehicleList = () => {
                 <Typography variant="h6">Departure Time</Typography>
               </TableCell>
               <TableCell>
-                <Typography variant="h6">No. of Seats</Typography>
+                <Typography variant="h6">Available Seats</Typography>
               </TableCell>
               <TableCell>
                 <Typography variant="h6">Map View</Typography>
@@ -117,7 +210,7 @@ const VehicleList = () => {
                   <Typography>{vehicle.departureTime}</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography>{vehicle.no_of_seats}</Typography>
+                  <Typography>{vehicle.available_seats}</Typography>
                 </TableCell>
                 <TableCell>
                   <Box
@@ -142,15 +235,28 @@ const VehicleList = () => {
                     alignItems="center"
                     justifyContent="center"
                   >
-                    <Link to={`/seats/${id}/${vehicle._id}`}>
+                    {vehicle.type === "Car" ? (
                       <Button
                         variant="contained"
                         color="primary"
+                        onClick={() =>
+                          handleCarRegister(vehicle._id, vehicle.seats)
+                        }
                         style={{ fontWeight: "bold" }}
                       >
-                        Select
+                        Register
                       </Button>
-                    </Link>
+                    ) : (
+                      <Link to={`/seats/${id}/${vehicle._id}`}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          style={{ fontWeight: "bold" }}
+                        >
+                          Seat Selection
+                        </Button>
+                      </Link>
+                    )}
                   </Box>
                 </TableCell>
               </TableRow>
@@ -158,6 +264,14 @@ const VehicleList = () => {
           </TableBody>
         </Table>
       </Paper>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={closePopup}
+        contentLabel="Popup"
+        style={customModalStyles}
+      >
+        <PopupContent onClose={closePopup} />
+      </Modal>
     </div>
   );
 };

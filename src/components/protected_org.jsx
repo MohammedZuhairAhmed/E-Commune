@@ -81,7 +81,7 @@ function Protected_Org() {
   return (
     <>
       {!isAuthenticated ? (
-        <h1>Not authenticated</h1>
+        <h1>Loading</h1>
       ) : (
         <Container elevation={3}>
           <Box sx={{ maxWidth: "800px", width: "100%" }}>

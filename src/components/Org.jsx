@@ -8,7 +8,6 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-attachment: fixed;
   background-image: url(${image});
   background-size: cover;
   background-color: #f2f2f2;

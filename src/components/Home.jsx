@@ -1,15 +1,16 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-
+import image from "../images/home-page.jpg";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-image: url("https://e0.pxfuel.com/wallpapers/779/896/desktop-wallpaper-transportation-background.jpg");
+  background-image: url(${image});
   background-size: cover;
   background-color: #f2f2f2;
+  background-attachment: fixed;
 `;
 
 const Title = styled.h1`
@@ -110,17 +111,17 @@ const ImageWrapper = styled.div`
   align-items: center;
 `;
 
-const Image = styled.img`
-  max-width: 100%;
-  max-height: 40rem;
-  border-radius: 3px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-  margin: 3rem 0;
+// const Image = styled.img`
+//   max-width: 100%;
+//   max-height: 40rem;
+//   border-radius: 3px;
+//   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+//   margin: 3rem 0;
 
-  @media (max-width: 768px) {
-    max-height: 20rem;
-  }
-`;
+//   @media (max-width: 768px) {
+//     max-height: 20rem;
+//   }
+// `;
 
 function Home() {
   return (

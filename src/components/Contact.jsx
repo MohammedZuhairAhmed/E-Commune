@@ -1,16 +1,73 @@
-import React from "react";
+import { useState } from "react";
+import image from "../images/contact.jpg";
+import { Typography, Button } from "@mui/material";
+import Modal from "react-modal";
 
 const Contact = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const PopupContent = ({ onClose }) => {
+    return (
+      <div>
+        <Typography
+          variant="body1"
+          sx={{ right: 0, bottom: 0, textAlign: "middle" }}
+        >
+          Your feedback has been recieved. Thank you
+        </Typography>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "20px",
+          }}
+        >
+          <Button variant="contained" onClick={onClose}>
+            close
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  const openPopup = () => {
+    setIsOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsOpen(false);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault;
+    openPopup();
+  };
+
+  const customModalStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      transform: "translate(-50%, -50%)",
+      width: "300px",
+      padding: "20px",
+    },
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+  };
+
   const styles = {
     container: {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
       height: "100vh",
-      backgroundImage:
-        "url(https://images.pexels.com/photos/33999/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1)",
+      backgroundImage: `url(${image})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
+      backgroundAttachment: "fixed",
     },
     formContainer: {
       padding: "20px",
@@ -93,11 +150,23 @@ const Contact = () => {
               style={styles.textArea}
             />
           </div>
-          <button type="submit" style={styles.submitButton}>
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            style={styles.submitButton}
+          >
             Submit
           </button>
         </form>
       </div>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={closePopup}
+        contentLabel="Popup"
+        style={customModalStyles}
+      >
+        <PopupContent onClose={closePopup} />
+      </Modal>
     </div>
   );
 };

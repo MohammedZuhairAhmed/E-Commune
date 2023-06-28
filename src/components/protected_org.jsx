@@ -101,7 +101,7 @@ function Protected_Org() {
             >
               <Paper elevation={3} style={{ width: "100%", padding: "16px" }}>
                 <Typography variant="h4" style={{ marginBottom: "16px" }}>
-                  Your Registered Commute Programs:
+                  Your Commute Programs:
                 </Typography>
                 <Table>
                   <TableHead>

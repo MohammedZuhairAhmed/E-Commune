@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import Modal from "react-modal";
+import image from "../images/Img1.png";
 
 const VehicleList = () => {
   const [selectedVehicles, setSelectedVehicles] = useState([]);
@@ -146,6 +147,10 @@ const VehicleList = () => {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
+        backgroundImage: `url(${image})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
       }}
     >
       <Paper elevation={3} style={{ width: "95%", padding: "16px" }}>
